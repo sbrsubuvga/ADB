@@ -1,0 +1,32 @@
+/// adb_kit — a typed Dart wrapper around the Android Debug Bridge.
+library;
+
+export 'src/adb_kit.dart';
+export 'src/models/device.dart';
+export 'src/models/display.dart';
+export 'src/models/file_entry.dart';
+export 'src/models/intent_spec.dart';
+export 'src/models/keycode.dart';
+export 'src/models/log_line.dart';
+export 'src/models/package.dart';
+export 'src/models/script.dart';
+export 'src/runner/adb_result.dart';
+export 'src/runner/adb_runner.dart';
+export 'src/services/activity_service.dart';
+export 'src/services/backup_service.dart';
+export 'src/services/connection_service.dart';
+export 'src/services/device_service.dart';
+export 'src/services/display_service.dart';
+export 'src/services/dumpsys_service.dart';
+export 'src/services/file_service.dart';
+export 'src/services/input_service.dart';
+export 'src/services/logcat_service.dart';
+export 'src/services/network_service.dart';
+export 'src/services/package_service.dart';
+export 'src/services/power_service.dart';
+export 'src/services/props_service.dart';
+export 'src/services/screen_service.dart';
+export 'src/services/script_service.dart';
+export 'src/services/settings_service.dart';
+export 'src/services/shell_service.dart';
+export 'src/util/shell_quote.dart';
