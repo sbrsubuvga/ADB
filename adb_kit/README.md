@@ -101,3 +101,32 @@ The full ADB surface from the [ADB Vision spec](https://github.com/sbrsubuvga/AD
 
 - **scrcpy H.264 backend** — needs a native decoder plugin. Use `ScreenService.mirror()` (screencap polling) for a portable fallback.
 - **OCR / view-hierarchy / pixel-RGB asserts** — stubbed, expand `ScriptPlayer._assert` to add more kinds.
+
+## ❤️ Support this package
+
+`adb_kit` is maintained as a free, open-source library. The Android
+platform-tools surface keeps shifting — new `pm` flags, `cmd` subcommands,
+permission model tweaks every release — and keeping this package's
+typed API in lockstep takes ongoing work. If it's saving your team
+time on a paid project (test farms, kiosk fleets, QA automation,
+desktop tooling), please consider sponsoring its maintenance.
+
+<p>
+  <a href="https://github.com/sponsors/sbrsubuvga">
+    <img alt="Sponsor on GitHub Sponsors"
+         src="https://img.shields.io/badge/Sponsor%20on-GitHub%20Sponsors-ea4aaa?style=for-the-badge&logo=github-sponsors&logoColor=white" />
+  </a>
+</p>
+
+Other ways to help, even without money:
+
+- ⭐ **Star** the [GitHub repo](https://github.com/sbrsubuvga/ADB) —
+  visibility is what brings new contributors.
+- 🐛 **File issues** when an `adb` command misbehaves — paste the
+  command, the device fingerprint (`getprop ro.build.fingerprint`),
+  and the package version.
+- 🔌 **Submit PRs** — the [`example/`](example/) ADB Vision app is a
+  good way to add new flows (mirror backends, view-hierarchy
+  inspector, OCR asserts) without touching the core library.
+- 🧪 **Test on weird devices** — vendor-skinned Androids and emulator
+  variants are where the parsers break first; reports help.
