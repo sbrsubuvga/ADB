@@ -47,8 +47,7 @@ class FileEntry {
     try {
       modified = DateTime.parse('${parts[5]} ${parts[6]}');
     } catch (_) {}
-    final normalizedParent =
-        parent.endsWith('/') ? parent : '$parent/';
+    final normalizedParent = parent.endsWith('/') ? parent : '$parent/';
     return FileEntry(
       name: nameStr,
       path: '$normalizedParent$nameStr',

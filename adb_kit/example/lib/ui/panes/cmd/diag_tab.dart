@@ -55,9 +55,7 @@ class _DiagTabState extends ConsumerState<DiagTab> {
               _chip('usagestats', () => kit.dumpsys.usageStats(s)),
               _chip('getprop', () async {
                 final all = await kit.props.getAll(s);
-                return all.entries
-                    .map((e) => '${e.key}=${e.value}')
-                    .join('\n');
+                return all.entries.map((e) => '${e.key}=${e.value}').join('\n');
               }),
               _chip('top', () async {
                 final r = await kit.shell.exec(s, 'top -n 1 -b');

@@ -56,10 +56,9 @@ final selectedSerialProvider = StateProvider<String?>((ref) => null);
 /// The selected device object (derived from devicesProvider).
 final selectedDeviceProvider = Provider<AdbDevice?>((ref) {
   final serial = ref.watch(selectedSerialProvider);
-  final devices = ref.watch(devicesProvider).maybeWhen(
-        data: (d) => d,
-        orElse: () => const <AdbDevice>[],
-      );
+  final devices = ref
+      .watch(devicesProvider)
+      .maybeWhen(data: (d) => d, orElse: () => const <AdbDevice>[]);
   if (serial == null) return null;
   try {
     return devices.firstWhere((d) => d.serial == serial);
@@ -112,22 +111,26 @@ class ActionLogNotifier extends StateNotifier<List<ActionLogEntry>> {
     switch (event) {
       case AdbEventStart(:final pid):
         if (pid == 0) break; // duplicate start
-        _push(ActionLogEntry(
-          timestamp: DateTime.now(),
-          command: event.command,
-          serial: event.serial,
-          kind: 'start',
-          message: 'pid=$pid',
-        ));
+        _push(
+          ActionLogEntry(
+            timestamp: DateTime.now(),
+            command: event.command,
+            serial: event.serial,
+            kind: 'start',
+            message: 'pid=$pid',
+          ),
+        );
       case AdbEventEnd(:final exitCode, :final duration):
-        _push(ActionLogEntry(
-          timestamp: DateTime.now(),
-          command: event.command,
-          serial: event.serial,
-          kind: 'end',
-          exitCode: exitCode,
-          message: '${duration.inMilliseconds}ms',
-        ));
+        _push(
+          ActionLogEntry(
+            timestamp: DateTime.now(),
+            command: event.command,
+            serial: event.serial,
+            kind: 'end',
+            exitCode: exitCode,
+            message: '${duration.inMilliseconds}ms',
+          ),
+        );
       case AdbEventStdout():
       case AdbEventStderr():
         // suppress per-line spam
@@ -145,17 +148,15 @@ class ActionLogNotifier extends StateNotifier<List<ActionLogEntry>> {
 
 final actionLogProvider =
     StateNotifierProvider<ActionLogNotifier, List<ActionLogEntry>>(
-        (ref) => ActionLogNotifier());
+      (ref) => ActionLogNotifier(),
+    );
 
 // ---------------------------------------------------------------------------
 // Mirror config
 // ---------------------------------------------------------------------------
 
 class MirrorConfig {
-  const MirrorConfig({
-    this.fps = 5,
-    this.enabled = true,
-  });
+  const MirrorConfig({this.fps = 5, this.enabled = true});
 
   final double fps;
   final bool enabled;
@@ -164,5 +165,6 @@ class MirrorConfig {
       MirrorConfig(fps: fps ?? this.fps, enabled: enabled ?? this.enabled);
 }
 
-final mirrorConfigProvider =
-    StateProvider<MirrorConfig>((ref) => const MirrorConfig());
+final mirrorConfigProvider = StateProvider<MirrorConfig>(
+  (ref) => const MirrorConfig(),
+);

@@ -95,7 +95,15 @@ package:com.android.settings versionCode:1
       );
       expect(
         spec.toArgs(),
-        ['-a', 'android.intent.action.VIEW', '-d', 'https://example.com', '--es', 'k', 'v'],
+        [
+          '-a',
+          'android.intent.action.VIEW',
+          '-d',
+          'https://example.com',
+          '--es',
+          'k',
+          'v'
+        ],
       );
     });
   });

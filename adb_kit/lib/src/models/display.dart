@@ -123,8 +123,8 @@ class AdbDisplay {
   }
 
   static int? parseWmDensity(String stdout) {
-    final m = RegExp(r'(?:Override|Physical) density:\s*(\d+)')
-        .firstMatch(stdout);
+    final m =
+        RegExp(r'(?:Override|Physical) density:\s*(\d+)').firstMatch(stdout);
     if (m == null) return null;
     return int.tryParse(m.group(1)!);
   }

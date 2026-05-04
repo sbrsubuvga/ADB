@@ -22,9 +22,8 @@ class NetworkService {
         serial: serial,
       );
 
-  Future<void> usbFunctions(String serial, String mode) =>
-      _runner.runOk(['shell', 'svc', 'usb', 'setFunctions', mode],
-          serial: serial);
+  Future<void> usbFunctions(String serial, String mode) => _runner
+      .runOk(['shell', 'svc', 'usb', 'setFunctions', mode], serial: serial);
 
   Future<void> airplaneMode(String serial, {required bool enabled}) =>
       _runner.runOk(

@@ -58,9 +58,7 @@ class _HomeShellState extends ConsumerState<HomeShell>
       ),
       drawer: breakpoint.isExpanded
           ? null
-          : Drawer(
-              child: SafeArea(child: DevicePicker()),
-            ),
+          : Drawer(child: SafeArea(child: DevicePicker())),
       body: switch (breakpoint) {
         Breakpoint.expanded => _buildExpanded(device),
         Breakpoint.medium => _buildMedium(device),
@@ -69,15 +67,20 @@ class _HomeShellState extends ConsumerState<HomeShell>
       bottomNavigationBar: breakpoint.isCompact
           ? NavigationBar(
               selectedIndex: _compactIndex,
-              onDestinationSelected: (i) =>
-                  setState(() => _compactIndex = i),
+              onDestinationSelected: (i) => setState(() => _compactIndex = i),
               destinations: const [
                 NavigationDestination(
-                    icon: Icon(Icons.smartphone), label: 'Mirror'),
+                  icon: Icon(Icons.smartphone),
+                  label: 'Mirror',
+                ),
                 NavigationDestination(
-                    icon: Icon(Icons.tune), label: 'Commands'),
+                  icon: Icon(Icons.tune),
+                  label: 'Commands',
+                ),
                 NavigationDestination(
-                    icon: Icon(Icons.receipt_long), label: 'Logs'),
+                  icon: Icon(Icons.receipt_long),
+                  label: 'Logs',
+                ),
               ],
             )
           : null,
@@ -105,8 +108,7 @@ class _HomeShellState extends ConsumerState<HomeShell>
             child: adbVersion.when(
               data: (v) => _versionBadge(context, v.split('\n').first, true),
               loading: () => _versionBadge(context, 'detecting adb…', false),
-              error: (_, _) =>
-                  _versionBadge(context, 'adb not found', false),
+              error: (_, _) => _versionBadge(context, 'adb not found', false),
             ),
           ),
         ],
@@ -140,10 +142,7 @@ class _HomeShellState extends ConsumerState<HomeShell>
               const VerticalDivider(width: 1),
               const Expanded(flex: 3, child: MirrorView()),
               const VerticalDivider(width: 1),
-              SizedBox(
-                width: 420,
-                child: _commandPanelOrEmpty(device),
-              ),
+              SizedBox(width: 420, child: _commandPanelOrEmpty(device)),
             ],
           ),
         ),
@@ -161,10 +160,7 @@ class _HomeShellState extends ConsumerState<HomeShell>
             children: [
               Expanded(flex: 3, child: const MirrorView()),
               const VerticalDivider(width: 1),
-              SizedBox(
-                width: 340,
-                child: _commandPanelOrEmpty(device),
-              ),
+              SizedBox(width: 340, child: _commandPanelOrEmpty(device)),
             ],
           ),
         ),
@@ -246,10 +242,7 @@ class _EmptyState extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Center(
-      child: Text(
-        message,
-        style: Theme.of(context).textTheme.bodyMedium,
-      ),
+      child: Text(message, style: Theme.of(context).textTheme.bodyMedium),
     );
   }
 }

@@ -54,30 +54,30 @@ class _LogcatPaneState extends ConsumerState<LogcatPane> {
     });
     _sub = kit.logcat
         .tail(
-      widget.device.serial,
-      filter: const LogcatFilter(
-        defaultPriority: LogPriority.verbose,
-        buffers: [LogBuffer.main, LogBuffer.system, LogBuffer.crash],
-      ),
-      onHandle: (h) {
-        _handle = h;
-        return h;
-      },
-    )
+          widget.device.serial,
+          filter: const LogcatFilter(
+            defaultPriority: LogPriority.verbose,
+            buffers: [LogBuffer.main, LogBuffer.system, LogBuffer.crash],
+          ),
+          onHandle: (h) {
+            _handle = h;
+            return h;
+          },
+        )
         .listen((line) {
-      if (!mounted) return;
-      setState(() {
-        _lines.add(line);
-        if (_lines.length > _capacity) {
-          _lines.removeRange(0, _lines.length - _capacity);
-        }
-      });
-      WidgetsBinding.instance.addPostFrameCallback((_) {
-        if (_scroll.hasClients) {
-          _scroll.jumpTo(_scroll.position.maxScrollExtent);
-        }
-      });
-    });
+          if (!mounted) return;
+          setState(() {
+            _lines.add(line);
+            if (_lines.length > _capacity) {
+              _lines.removeRange(0, _lines.length - _capacity);
+            }
+          });
+          WidgetsBinding.instance.addPostFrameCallback((_) {
+            if (_scroll.hasClients) {
+              _scroll.jumpTo(_scroll.position.maxScrollExtent);
+            }
+          });
+        });
   }
 
   void _stop() {
@@ -126,8 +126,9 @@ class _LogcatPaneState extends ConsumerState<LogcatPane> {
                 onChanged: (v) =>
                     setState(() => _minPriority = v ?? LogPriority.verbose),
                 items: [
-                  for (final p in LogPriority.values
-                      .where((p) => p != LogPriority.unknown))
+                  for (final p in LogPriority.values.where(
+                    (p) => p != LogPriority.unknown,
+                  ))
                     DropdownMenuItem(value: p, child: Text(p.letter)),
                 ],
               ),
@@ -140,8 +141,7 @@ class _LogcatPaneState extends ConsumerState<LogcatPane> {
                     hintText: 'filter',
                     border: OutlineInputBorder(),
                   ),
-                  onChanged: (v) =>
-                      setState(() => _query = v.toLowerCase()),
+                  onChanged: (v) => setState(() => _query = v.toLowerCase()),
                 ),
               ),
             ],

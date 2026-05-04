@@ -111,8 +111,7 @@ class _SettingsTabState extends ConsumerState<SettingsTab> {
                 return const Center(child: CircularProgressIndicator());
               }
               if (snap.hasError) return Center(child: Text('${snap.error}'));
-              final keys = (snap.data ?? const <String, String>{})
-                  .entries
+              final keys = (snap.data ?? const <String, String>{}).entries
                   .where((e) => e.key.toLowerCase().contains(_query))
                   .toList();
               return ListView.builder(
@@ -124,12 +123,16 @@ class _SettingsTabState extends ConsumerState<SettingsTab> {
                     title: SelectableText(
                       e.key,
                       style: const TextStyle(
-                          fontFamily: 'monospace', fontSize: 12),
+                        fontFamily: 'monospace',
+                        fontSize: 12,
+                      ),
                     ),
                     subtitle: SelectableText(
                       e.value,
                       style: const TextStyle(
-                          fontFamily: 'monospace', fontSize: 11),
+                        fontFamily: 'monospace',
+                        fontSize: 11,
+                      ),
                     ),
                     trailing: IconButton(
                       icon: const Icon(Icons.edit, size: 18),
@@ -154,11 +157,13 @@ class _SettingsTabState extends ConsumerState<SettingsTab> {
         content: TextField(controller: ctrl, autofocus: true),
         actions: [
           TextButton(
-              onPressed: () => Navigator.of(ctx).pop(false),
-              child: const Text('Cancel')),
+            onPressed: () => Navigator.of(ctx).pop(false),
+            child: const Text('Cancel'),
+          ),
           FilledButton(
-              onPressed: () => Navigator.of(ctx).pop(true),
-              child: const Text('Save')),
+            onPressed: () => Navigator.of(ctx).pop(true),
+            child: const Text('Save'),
+          ),
         ],
       ),
     );

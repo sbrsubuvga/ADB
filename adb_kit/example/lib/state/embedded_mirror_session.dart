@@ -82,8 +82,7 @@ class EmbeddedMirrorSession {
       '--window-height=1',
       '--window-x=-2000',
       '--window-y=-2000',
-      if (_displayId != null && _displayId != 0)
-        '--display-id=$_displayId',
+      if (_displayId != null && _displayId != 0) '--display-id=$_displayId',
       '--max-fps=60',
       '--record=$path',
     ];
@@ -95,16 +94,14 @@ class EmbeddedMirrorSession {
     _filePath = path;
 
     // Capture stdout/stderr lines for diagnostics.
-    proc.stdout
-        .transform(utf8.decoder)
-        .listen((s) => _logBuffer.write(s));
-    proc.stderr
-        .transform(utf8.decoder)
-        .listen((s) => _logBuffer.write(s));
+    proc.stdout.transform(utf8.decoder).listen((s) => _logBuffer.write(s));
+    proc.stderr.transform(utf8.decoder).listen((s) => _logBuffer.write(s));
 
-    unawaited(proc.exitCode.then((code) {
-      _logBuffer.writeln('\nscrcpy exit=$code');
-    }));
+    unawaited(
+      proc.exitCode.then((code) {
+        _logBuffer.writeln('\nscrcpy exit=$code');
+      }),
+    );
 
     // On macOS try to hide the scrcpy window via AppleScript (best-effort).
     if (Platform.isMacOS) {
@@ -116,8 +113,9 @@ class EmbeddedMirrorSession {
     final deadline = DateTime.now().add(startupTimeout);
     while (DateTime.now().isBefore(deadline)) {
       try {
-        final code =
-            await proc.exitCode.timeout(const Duration(milliseconds: 50));
+        final code = await proc.exitCode.timeout(
+          const Duration(milliseconds: 50),
+        );
         _detectKnownFailure();
         throw StateError(
           'scrcpy exited (code $code) before producing output.\n\n$_logBuffer',

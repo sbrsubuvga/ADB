@@ -35,23 +35,20 @@ class _IntentsTabState extends ConsumerState<IntentsTab> {
   }
 
   IntentSpec _spec() => IntentSpec(
-        action: _action.text.trim().isEmpty ? null : _action.text.trim(),
-        data: _data.text.trim().isEmpty ? null : _data.text.trim(),
-        component: _component.text.trim().isEmpty
-            ? null
-            : _component.text.trim(),
-        mimeType: _mime.text.trim().isEmpty ? null : _mime.text.trim(),
-        categories: _category.text.trim().isEmpty
-            ? const []
-            : _category.text.trim().split(','),
-        packageName: _packageCtrl.text.trim().isEmpty
-            ? null
-            : _packageCtrl.text.trim(),
-        extras: [
-          for (final e in _extras)
-            IntentExtra(e.type, e.key.text, e.value.text),
-        ],
-      );
+    action: _action.text.trim().isEmpty ? null : _action.text.trim(),
+    data: _data.text.trim().isEmpty ? null : _data.text.trim(),
+    component: _component.text.trim().isEmpty ? null : _component.text.trim(),
+    mimeType: _mime.text.trim().isEmpty ? null : _mime.text.trim(),
+    categories: _category.text.trim().isEmpty
+        ? const []
+        : _category.text.trim().split(','),
+    packageName: _packageCtrl.text.trim().isEmpty
+        ? null
+        : _packageCtrl.text.trim(),
+    extras: [
+      for (final e in _extras) IntentExtra(e.type, e.key.text, e.value.text),
+    ],
+  );
 
   Future<void> _send() async {
     final kit = ref.read(adbKitProvider);
@@ -230,22 +227,22 @@ class _IntentsTabState extends ConsumerState<IntentsTab> {
   }
 
   Widget _row(String label, TextEditingController c) => Padding(
-        padding: const EdgeInsets.only(bottom: 6),
-        child: Row(
-          children: [
-            SizedBox(width: 110, child: Text(label)),
-            Expanded(
-              child: TextField(
-                controller: c,
-                decoration: const InputDecoration(
-                  isDense: true,
-                  border: OutlineInputBorder(),
-                ),
-              ),
+    padding: const EdgeInsets.only(bottom: 6),
+    child: Row(
+      children: [
+        SizedBox(width: 110, child: Text(label)),
+        Expanded(
+          child: TextField(
+            controller: c,
+            decoration: const InputDecoration(
+              isDense: true,
+              border: OutlineInputBorder(),
             ),
-          ],
+          ),
         ),
-      );
+      ],
+    ),
+  );
 }
 
 class _Extra {

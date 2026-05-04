@@ -46,7 +46,9 @@ class _ShellTabState extends ConsumerState<ShellTab> {
       setState(() {
         if (r.stdout.isNotEmpty) _outputBuffer.writeln(r.stdout.trimRight());
         if (r.stderr.isNotEmpty) _outputBuffer.writeln(r.stderr.trimRight());
-        _outputBuffer.writeln('[exit=${r.exitCode}, ${r.duration.inMilliseconds}ms]');
+        _outputBuffer.writeln(
+          '[exit=${r.exitCode}, ${r.duration.inMilliseconds}ms]',
+        );
       });
     } catch (e) {
       setState(() => _outputBuffer.writeln('error: $e'));
@@ -97,8 +99,9 @@ class _ShellTabState extends ConsumerState<ShellTab> {
               Expanded(
                 child: Shortcuts(
                   shortcuts: const {
-                    SingleActivator(LogicalKeyboardKey.arrowUp):
-                        _HistoryIntent(-1),
+                    SingleActivator(LogicalKeyboardKey.arrowUp): _HistoryIntent(
+                      -1,
+                    ),
                     SingleActivator(LogicalKeyboardKey.arrowDown):
                         _HistoryIntent(1),
                   },

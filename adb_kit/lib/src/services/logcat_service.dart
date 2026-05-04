@@ -36,7 +36,8 @@ class LogcatFilter {
   List<String> toArgs() => [
         'logcat',
         for (final b in buffers) ...['-b', b.token],
-        '-v', format,
+        '-v',
+        format,
         if (pid != null) ...['--pid=$pid'],
         if (uid != null) ...['--uid=$uid'],
         for (final e in tagPriority.entries) '${e.key}:${e.value.letter}',

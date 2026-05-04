@@ -61,7 +61,8 @@ class PackageListFilter {
   final int? user;
 
   List<String> toArgs() => [
-        'list', 'packages',
+        'list',
+        'packages',
         if (showPath) '-f',
         if (showVersionCode) '--show-versioncode',
         if (showInstaller) '-i',
@@ -163,9 +164,8 @@ class PackageService {
         timeout: const Duration(seconds: 60),
       );
 
-  Future<String> listPermissions(String serial) =>
-      _runner.runOk(['shell', 'pm', 'list', 'permissions', '-g'],
-          serial: serial);
+  Future<String> listPermissions(String serial) => _runner
+      .runOk(['shell', 'pm', 'list', 'permissions', '-g'], serial: serial);
   Future<String> listFeatures(String serial) =>
       _runner.runOk(['shell', 'pm', 'list', 'features'], serial: serial);
   Future<String> listLibraries(String serial) =>

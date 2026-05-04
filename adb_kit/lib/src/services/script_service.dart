@@ -31,7 +31,8 @@ class ScriptStepFailed extends ScriptEvent {
 }
 
 class ScriptFinished extends ScriptEvent {
-  const ScriptFinished() : super(-1, const ScriptStep(type: ScriptStepType.wait));
+  const ScriptFinished()
+      : super(-1, const ScriptStep(type: ScriptStepType.wait));
 }
 
 /// A ScriptRecorder observes manual input and writes out a replayable Script.
@@ -171,8 +172,7 @@ class ScriptPlayer {
                 displayId: _iv(step.args['display'], allVars),
               );
             case ScriptStepType.swipe:
-              final duration =
-                  _iv(step.args['duration_ms'], allVars) ?? 300;
+              final duration = _iv(step.args['duration_ms'], allVars) ?? 300;
               await input.swipe(
                 serial,
                 x1: _iv(step.args['x1'], allVars)!,
@@ -192,14 +192,12 @@ class ScriptPlayer {
                 durationMs: _iv(step.args['duration_ms'], allVars) ?? 400,
               );
             case ScriptStepType.text:
-              await input.text(serial,
-                  _interp(step.args['value'] as String, allVars));
+              await input.text(
+                  serial, _interp(step.args['value'] as String, allVars));
             case ScriptStepType.key:
-              await input.keyEvent(
-                  serial, step.args['keycode'] as String);
+              await input.keyEvent(serial, step.args['keycode'] as String);
             case ScriptStepType.wait:
-              final ms =
-                  (_iv(step.args['ms'], allVars) ?? 0) ~/ speed.round();
+              final ms = (_iv(step.args['ms'], allVars) ?? 0) ~/ speed.round();
               await Future<void>.delayed(Duration(milliseconds: ms));
             case ScriptStepType.waitFor:
               message = await _waitFor(serial, step);
@@ -236,8 +234,8 @@ class ScriptPlayer {
   }
 
   Future<String> _waitFor(String serial, ScriptStep step) async {
-    final timeout =
-        Duration(milliseconds: (step.args['timeout_ms'] as num?)?.toInt() ?? 10000);
+    final timeout = Duration(
+        milliseconds: (step.args['timeout_ms'] as num?)?.toInt() ?? 10000);
     final deadline = DateTime.now().add(timeout);
     final condition = step.args['condition'] as String?;
     final value = step.args['value'] as String?;
@@ -266,8 +264,7 @@ class ScriptPlayer {
     final kind = step.args['kind'];
     switch (kind) {
       case 'shell_exit':
-        final r =
-            await shell.exec(serial, step.args['cmd']! as String);
+        final r = await shell.exec(serial, step.args['cmd']! as String);
         final expected = (step.args['exit'] as num?)?.toInt() ?? 0;
         if (r.exitCode != expected) {
           throw StateError('exit=${r.exitCode} expected $expected');

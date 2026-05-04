@@ -69,41 +69,41 @@ class _MirrorViewState extends ConsumerState<MirrorView> {
     _sub?.cancel();
     _sub = kit.screen
         .mirror(
-      serial,
-      fps: targetFps,
-      options: ScreencapOptions(
-        displayId: captureDisplayId == 0 ? null : captureDisplayId,
-      ),
-    )
+          serial,
+          fps: targetFps,
+          options: ScreencapOptions(
+            displayId: captureDisplayId == 0 ? null : captureDisplayId,
+          ),
+        )
         .listen((bytes) {
-      if (!mounted) return;
-      final isGood = bytes.isNotEmpty && ScreenService.isPng(bytes);
-      if (!isGood) {
-        _consecutiveBadFrames++;
-        setState(() => _fps = 0);
-        if (!_capturingFallback &&
-            _activeDisplayId != 0 &&
-            _consecutiveBadFrames >= _failBeforeFallback) {
-          // Selected display can't be screencap'd (typical for overlay
-          // displays). Permanently fall back to capturing the primary
-          // display, but keep routing input to the selected display id.
-          _capturingFallback = true;
-          _startCapture(serial, 0, targetFps);
-        }
-        return;
-      }
-      _consecutiveBadFrames = 0;
-      final now = DateTime.now();
-      final dt = now.difference(_lastFrameTs).inMilliseconds;
-      _lastFrameTs = now;
-      final dims = ScreenService.readPngDimensions(bytes);
-      setState(() {
-        _frame = bytes;
-        _frameWidth = dims?.$1;
-        _frameHeight = dims?.$2;
-        _fps = dt > 0 ? 1000 / dt : 0;
-      });
-    });
+          if (!mounted) return;
+          final isGood = bytes.isNotEmpty && ScreenService.isPng(bytes);
+          if (!isGood) {
+            _consecutiveBadFrames++;
+            setState(() => _fps = 0);
+            if (!_capturingFallback &&
+                _activeDisplayId != 0 &&
+                _consecutiveBadFrames >= _failBeforeFallback) {
+              // Selected display can't be screencap'd (typical for overlay
+              // displays). Permanently fall back to capturing the primary
+              // display, but keep routing input to the selected display id.
+              _capturingFallback = true;
+              _startCapture(serial, 0, targetFps);
+            }
+            return;
+          }
+          _consecutiveBadFrames = 0;
+          final now = DateTime.now();
+          final dt = now.difference(_lastFrameTs).inMilliseconds;
+          _lastFrameTs = now;
+          final dims = ScreenService.readPngDimensions(bytes);
+          setState(() {
+            _frame = bytes;
+            _frameWidth = dims?.$1;
+            _frameHeight = dims?.$2;
+            _fps = dt > 0 ? 1000 / dt : 0;
+          });
+        });
   }
 
   @override
@@ -210,10 +210,7 @@ class _MirrorViewState extends ConsumerState<MirrorView> {
     if (list.isEmpty) {
       return const AdbDisplay(id: 0, width: 1080, height: 2400);
     }
-    return list.firstWhere(
-      (d) => d.id == selected,
-      orElse: () => list.first,
-    );
+    return list.firstWhere((d) => d.id == selected, orElse: () => list.first);
   }
 
   Widget _buildDisplayDropdown(List<AdbDisplay> displays, int selected) {
@@ -251,12 +248,14 @@ class _MirrorViewState extends ConsumerState<MirrorView> {
         ),
         IconButton(
           icon: const Icon(Icons.open_in_new, size: 18),
-          tooltip: 'Open this display in scrcpy (real-time visual mirror, '
+          tooltip:
+              'Open this display in scrcpy (real-time visual mirror, '
               'works for overlay/virtual displays)',
           onPressed: displays.isEmpty ? null : _launchInScrcpy,
         ),
         Tooltip(
-          message: 'Embed non-primary displays in this window via scrcpy + '
+          message:
+              'Embed non-primary displays in this window via scrcpy + '
               'libmpv. Turn off to use adb screencap (won\'t see overlays).',
           child: Row(
             mainAxisSize: MainAxisSize.min,
@@ -266,10 +265,9 @@ class _MirrorViewState extends ConsumerState<MirrorView> {
                 value: ref.watch(embedSecondaryProvider),
                 onChanged: (v) async {
                   ref.read(embedSecondaryProvider.notifier).state = v;
-                  await ref.read(sharedPrefsProvider).setBool(
-                        'embed_secondary',
-                        v,
-                      );
+                  await ref
+                      .read(sharedPrefsProvider)
+                      .setBool('embed_secondary', v);
                 },
               ),
             ],
@@ -281,9 +279,18 @@ class _MirrorViewState extends ConsumerState<MirrorView> {
           onSelected: _handleOverlayAction,
           itemBuilder: (_) => const [
             PopupMenuItem(value: 'add', child: Text('Add virtual display…')),
-            PopupMenuItem(value: 'add-1080p', child: Text('Add 1080×1920 / 320 dpi')),
-            PopupMenuItem(value: 'add-720p', child: Text('Add 720×1280 / 240 dpi')),
-            PopupMenuItem(value: 'remove', child: Text('Remove virtual displays')),
+            PopupMenuItem(
+              value: 'add-1080p',
+              child: Text('Add 1080×1920 / 320 dpi'),
+            ),
+            PopupMenuItem(
+              value: 'add-720p',
+              child: Text('Add 720×1280 / 240 dpi'),
+            ),
+            PopupMenuItem(
+              value: 'remove',
+              child: Text('Remove virtual displays'),
+            ),
           ],
         ),
       ],
@@ -315,8 +322,9 @@ class _MirrorViewState extends ConsumerState<MirrorView> {
           ),
           actions: [
             TextButton(
-                onPressed: () => Navigator.of(ctx).pop(),
-                child: const Text('OK')),
+              onPressed: () => Navigator.of(ctx).pop(),
+              child: const Text('OK'),
+            ),
           ],
         ),
       );
@@ -335,8 +343,9 @@ class _MirrorViewState extends ConsumerState<MirrorView> {
       );
     } catch (e) {
       if (!mounted) return;
-      ScaffoldMessenger.of(context)
-          .showSnackBar(SnackBar(content: Text('scrcpy failed to launch: $e')));
+      ScaffoldMessenger.of(
+        context,
+      ).showSnackBar(SnackBar(content: Text('scrcpy failed to launch: $e')));
     }
   }
 
@@ -363,17 +372,16 @@ class _MirrorViewState extends ConsumerState<MirrorView> {
       ref.invalidate(displaysProvider);
     } catch (e) {
       if (mounted) {
-        ScaffoldMessenger.of(context)
-            .showSnackBar(SnackBar(content: Text('overlay failed: $e')));
+        ScaffoldMessenger.of(
+          context,
+        ).showSnackBar(SnackBar(content: Text('overlay failed: $e')));
       }
     }
   }
 
   Future<void> _appendOverlay(AdbKit kit, String serial, String entry) async {
     final current = await kit.displays.getOverlayDisplays(serial);
-    final next = current == null || current.isEmpty
-        ? entry
-        : '$current;$entry';
+    final next = current == null || current.isEmpty ? entry : '$current;$entry';
     await kit.displays.setOverlayDisplays(serial, next);
   }
 
@@ -409,140 +417,145 @@ class _MirrorViewState extends ConsumerState<MirrorView> {
         ),
         actions: [
           TextButton(
-              onPressed: () => Navigator.of(ctx).pop(false),
-              child: const Text('Cancel')),
+            onPressed: () => Navigator.of(ctx).pop(false),
+            child: const Text('Cancel'),
+          ),
           FilledButton(
-              onPressed: () => Navigator.of(ctx).pop(true),
-              child: const Text('Add')),
+            onPressed: () => Navigator.of(ctx).pop(true),
+            child: const Text('Add'),
+          ),
         ],
       ),
     );
-    return ok == true && ctrl.text.trim().isNotEmpty
-        ? ctrl.text.trim()
-        : null;
+    return ok == true && ctrl.text.trim().isNotEmpty ? ctrl.text.trim() : null;
   }
 
   Widget _buildMirror(AdbDisplay display, AdbDevice device) {
-    return LayoutBuilder(builder: (ctx, constraints) {
-      // Prefer the actual captured-frame dimensions over dumpsys's reported
-      // ones — screencap returns the post-rotation PNG, so when the device
-      // is in landscape the frame is 2400×1080 even though dumpsys still
-      // reports 1080×2400. Falling back to display dims only until the
-      // first frame arrives.
-      final captureW = (_frameWidth ?? display.width).toDouble();
-      final captureH = (_frameHeight ?? display.height).toDouble();
-      final widgetSize = _fittedSize(
-        constraints.biggest,
-        Size(captureW, captureH),
-      );
-      // Coordinate mapper uses the same dimensions, with rotation=0 because
-      // those dimensions already reflect any device rotation.
-      final mapper = CoordinateMapper(
-        displayWidth: captureW,
-        displayHeight: captureH,
-        widgetWidth: widgetSize.width,
-        widgetHeight: widgetSize.height,
-      );
-      return Focus(
-        focusNode: _focusNode,
-        autofocus: true,
-        onKeyEvent: (node, event) => _handleKey(event, display, device),
-        child: GestureDetector(
-          onTap: () => _focusNode.requestFocus(),
-          child: MouseRegion(
-            onHover: (e) => setState(() => _lastHover = e.localPosition),
-            child: Center(
-              child: SizedBox(
-                width: widgetSize.width,
-                height: widgetSize.height,
-                child: Stack(
-                  fit: StackFit.expand,
-                  children: [
-                    ColoredBox(color: Theme.of(context).colorScheme.surface),
-                    if (_frame != null)
-                      Image.memory(
-                        _frame!,
-                        gaplessPlayback: true,
-                        fit: BoxFit.fill,
-                        filterQuality: FilterQuality.medium,
-                        errorBuilder: (ctx, err, _) => const Center(
-                          child: Padding(
-                            padding: EdgeInsets.all(16),
-                            child: Text(
-                              'screencap returned no usable image',
-                              textAlign: TextAlign.center,
-                              style: TextStyle(color: Colors.white70),
+    return LayoutBuilder(
+      builder: (ctx, constraints) {
+        // Prefer the actual captured-frame dimensions over dumpsys's reported
+        // ones — screencap returns the post-rotation PNG, so when the device
+        // is in landscape the frame is 2400×1080 even though dumpsys still
+        // reports 1080×2400. Falling back to display dims only until the
+        // first frame arrives.
+        final captureW = (_frameWidth ?? display.width).toDouble();
+        final captureH = (_frameHeight ?? display.height).toDouble();
+        final widgetSize = _fittedSize(
+          constraints.biggest,
+          Size(captureW, captureH),
+        );
+        // Coordinate mapper uses the same dimensions, with rotation=0 because
+        // those dimensions already reflect any device rotation.
+        final mapper = CoordinateMapper(
+          displayWidth: captureW,
+          displayHeight: captureH,
+          widgetWidth: widgetSize.width,
+          widgetHeight: widgetSize.height,
+        );
+        return Focus(
+          focusNode: _focusNode,
+          autofocus: true,
+          onKeyEvent: (node, event) => _handleKey(event, display, device),
+          child: GestureDetector(
+            onTap: () => _focusNode.requestFocus(),
+            child: MouseRegion(
+              onHover: (e) => setState(() => _lastHover = e.localPosition),
+              child: Center(
+                child: SizedBox(
+                  width: widgetSize.width,
+                  height: widgetSize.height,
+                  child: Stack(
+                    fit: StackFit.expand,
+                    children: [
+                      ColoredBox(color: Theme.of(context).colorScheme.surface),
+                      if (_frame != null)
+                        Image.memory(
+                          _frame!,
+                          gaplessPlayback: true,
+                          fit: BoxFit.fill,
+                          filterQuality: FilterQuality.medium,
+                          errorBuilder: (ctx, err, _) => const Center(
+                            child: Padding(
+                              padding: EdgeInsets.all(16),
+                              child: Text(
+                                'screencap returned no usable image',
+                                textAlign: TextAlign.center,
+                                style: TextStyle(color: Colors.white70),
+                              ),
                             ),
                           ),
                         ),
-                      ),
-                    if (_frame == null)
-                      const Center(
-                        child: Text(
-                          'waiting for first frame…',
-                          style: TextStyle(color: Colors.white54),
+                      if (_frame == null)
+                        const Center(
+                          child: Text(
+                            'waiting for first frame…',
+                            style: TextStyle(color: Colors.white54),
+                          ),
                         ),
-                      ),
-                    _buildInputLayer(mapper, device, display),
-                    if (_capturingFallback && _activeDisplayId != 0)
-                      Positioned(
-                        left: 8,
-                        top: 8,
-                        right: 8,
-                        child: IgnorePointer(
-                          child: Container(
-                            padding: const EdgeInsets.symmetric(
-                                horizontal: 10, vertical: 6),
-                            decoration: BoxDecoration(
-                              color: Colors.indigo.withValues(alpha: 0.78),
-                              borderRadius: BorderRadius.circular(4),
-                            ),
-                            child: Row(
-                              mainAxisSize: MainAxisSize.min,
-                              children: [
-                                const Icon(Icons.info_outline,
-                                    color: Colors.white, size: 16),
-                                const SizedBox(width: 6),
-                                Expanded(
-                                  child: Text(
-                                    'Input → display $_activeDisplayId · '
-                                    'visible mirror is primary because '
-                                    'screencap can\'t capture overlay/virtual '
-                                    'displays. Use "Open in scrcpy" to see '
-                                    'display $_activeDisplayId.',
-                                    style: const TextStyle(
-                                      color: Colors.white,
-                                      fontSize: 12,
+                      _buildInputLayer(mapper, device, display),
+                      if (_capturingFallback && _activeDisplayId != 0)
+                        Positioned(
+                          left: 8,
+                          top: 8,
+                          right: 8,
+                          child: IgnorePointer(
+                            child: Container(
+                              padding: const EdgeInsets.symmetric(
+                                horizontal: 10,
+                                vertical: 6,
+                              ),
+                              decoration: BoxDecoration(
+                                color: Colors.indigo.withValues(alpha: 0.78),
+                                borderRadius: BorderRadius.circular(4),
+                              ),
+                              child: Row(
+                                mainAxisSize: MainAxisSize.min,
+                                children: [
+                                  const Icon(
+                                    Icons.info_outline,
+                                    color: Colors.white,
+                                    size: 16,
+                                  ),
+                                  const SizedBox(width: 6),
+                                  Expanded(
+                                    child: Text(
+                                      'Input → display $_activeDisplayId · '
+                                      'visible mirror is primary because '
+                                      'screencap can\'t capture overlay/virtual '
+                                      'displays. Use "Open in scrcpy" to see '
+                                      'display $_activeDisplayId.',
+                                      style: const TextStyle(
+                                        color: Colors.white,
+                                        fontSize: 12,
+                                      ),
                                     ),
                                   ),
-                                ),
-                              ],
+                                ],
+                              ),
                             ),
                           ),
                         ),
-                      ),
-                    if (_lastHover != null)
-                      Positioned(
-                        right: 8,
-                        bottom: 8,
-                        child: _CoordinateHud(
-                          mapper: mapper,
-                          position: _lastHover!,
+                      if (_lastHover != null)
+                        Positioned(
+                          right: 8,
+                          bottom: 8,
+                          child: _CoordinateHud(
+                            mapper: mapper,
+                            position: _lastHover!,
+                          ),
                         ),
+                      IgnorePointer(
+                        child: CustomPaint(painter: _PulsePainter(_tapPulses)),
                       ),
-                    IgnorePointer(
-                      child: CustomPaint(
-                        painter: _PulsePainter(_tapPulses),
-                      ),
-                    ),
-                  ],
+                    ],
+                  ),
                 ),
               ),
             ),
           ),
-        ),
-      );
-    });
+        );
+      },
+    );
   }
 
   Widget _buildInputLayer(
@@ -592,8 +605,10 @@ class _MirrorViewState extends ConsumerState<MirrorView> {
       },
       onPointerSignal: (signal) {
         if (signal is PointerScrollEvent) {
-          final (cx, cy) =
-              mapper.map(signal.localPosition.dx, signal.localPosition.dy);
+          final (cx, cy) = mapper.map(
+            signal.localPosition.dx,
+            signal.localPosition.dy,
+          );
           final dy = signal.scrollDelta.dy;
           final target = (dy * 2).clamp(-400.0, 400.0).round();
           _swipe(device, display, cx, cy, cx, cy - target, 150);
@@ -603,8 +618,7 @@ class _MirrorViewState extends ConsumerState<MirrorView> {
     );
   }
 
-  Future<void> _tap(
-      AdbDevice device, AdbDisplay display, int x, int y) async {
+  Future<void> _tap(AdbDevice device, AdbDisplay display, int x, int y) async {
     final kit = ref.read(adbKitProvider);
     try {
       await kit.input.tap(
@@ -655,13 +669,17 @@ class _MirrorViewState extends ConsumerState<MirrorView> {
       setState(() {
         final now = DateTime.now();
         _tapPulses.removeWhere(
-            (p) => now.difference(p.started).inMilliseconds > 650);
+          (p) => now.difference(p.started).inMilliseconds > 650,
+        );
       });
     });
   }
 
   KeyEventResult _handleKey(
-      KeyEvent event, AdbDisplay display, AdbDevice device) {
+    KeyEvent event,
+    AdbDisplay display,
+    AdbDevice device,
+  ) {
     if (event is! KeyDownEvent) return KeyEventResult.ignored;
     final kit = ref.read(adbKitProvider);
     final ch = event.character;
@@ -694,8 +712,10 @@ class _MirrorViewState extends ConsumerState<MirrorView> {
   }
 
   Size _fittedSize(Size available, Size content) {
-    final scale = (available.width / content.width)
-        .clamp(0.0, available.height / content.height);
+    final scale = (available.width / content.width).clamp(
+      0.0,
+      available.height / content.height,
+    );
     return Size(content.width * scale, content.height * scale);
   }
 }

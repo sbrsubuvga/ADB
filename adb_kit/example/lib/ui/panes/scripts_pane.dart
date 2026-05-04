@@ -59,31 +59,52 @@ class _ScriptsPaneState extends ConsumerState<ScriptsPane> {
     if (dest == null) return;
     await File(dest).writeAsString(_script.encode());
     if (mounted) {
-      ScaffoldMessenger.of(context)
-          .showSnackBar(SnackBar(content: Text('Saved $dest')));
+      ScaffoldMessenger.of(
+        context,
+      ).showSnackBar(SnackBar(content: Text('Saved $dest')));
     }
   }
 
   void _addStep(ScriptStepType type) {
     final args = switch (type) {
       ScriptStepType.tap => {'x': 540, 'y': 1200, 'delay_ms': 0},
-      ScriptStepType.swipe =>
-        {'x1': 540, 'y1': 1500, 'x2': 540, 'y2': 500, 'duration_ms': 300},
+      ScriptStepType.swipe => {
+        'x1': 540,
+        'y1': 1500,
+        'x2': 540,
+        'y2': 500,
+        'duration_ms': 300,
+      },
       ScriptStepType.text => {'value': 'hello'},
       ScriptStepType.key => {'keycode': 'KEYCODE_ENTER'},
       ScriptStepType.wait => {'ms': 500},
       ScriptStepType.shell => {'cmd': 'pm list packages -3'},
       ScriptStepType.screenshot => {'path': 'step.png'},
       ScriptStepType.intent => {'action': 'android.intent.action.VIEW'},
-      ScriptStepType.waitFor =>
-        {'condition': 'activity', 'value': 'com.example/.Main', 'timeout_ms': 5000},
-      ScriptStepType.assertion => {'kind': 'shell_exit', 'cmd': 'true', 'exit': 0},
-      ScriptStepType.dragAndDrop =>
-        {'x1': 100, 'y1': 100, 'x2': 500, 'y2': 500, 'duration_ms': 300},
+      ScriptStepType.waitFor => {
+        'condition': 'activity',
+        'value': 'com.example/.Main',
+        'timeout_ms': 5000,
+      },
+      ScriptStepType.assertion => {
+        'kind': 'shell_exit',
+        'cmd': 'true',
+        'exit': 0,
+      },
+      ScriptStepType.dragAndDrop => {
+        'x1': 100,
+        'y1': 100,
+        'x2': 500,
+        'y2': 500,
+        'duration_ms': 300,
+      },
     };
     setState(() {
       _script = _script.copyWith(
-        steps: [..._script.steps, ScriptStep(type: type, args: args)],
+        steps: [
+          ..._script.steps,
+          ScriptStep(type: type, args: args),
+        ],
       );
     });
   }
@@ -107,11 +128,13 @@ class _ScriptsPaneState extends ConsumerState<ScriptsPane> {
         ),
         actions: [
           TextButton(
-              onPressed: () => Navigator.of(ctx).pop(false),
-              child: const Text('Cancel')),
+            onPressed: () => Navigator.of(ctx).pop(false),
+            child: const Text('Cancel'),
+          ),
           FilledButton(
-              onPressed: () => Navigator.of(ctx).pop(true),
-              child: const Text('Save')),
+            onPressed: () => Navigator.of(ctx).pop(true),
+            child: const Text('Save'),
+          ),
         ],
       ),
     );
@@ -136,16 +159,21 @@ class _ScriptsPaneState extends ConsumerState<ScriptsPane> {
       _events.clear();
     });
     _playSub = kit.scripts
-        .play(widget.device.serial, _script,
-            speed: _speed, loops: _loops, stopOnError: false)
+        .play(
+          widget.device.serial,
+          _script,
+          speed: _speed,
+          loops: _loops,
+          stopOnError: false,
+        )
         .listen((evt) {
-      if (!mounted) return;
-      setState(() => _events.add(evt));
-      if (evt is ScriptFinished) {
-        _playing = false;
-        _playSub?.cancel();
-      }
-    });
+          if (!mounted) return;
+          setState(() => _events.add(evt));
+          if (evt is ScriptFinished) {
+            _playing = false;
+            _playSub?.cancel();
+          }
+        });
   }
 
   @override
@@ -180,7 +208,10 @@ class _ScriptsPaneState extends ConsumerState<ScriptsPane> {
                           PopupMenuItem(value: t, child: Text(t.toJson())),
                       ],
                       child: const Padding(
-                        padding: EdgeInsets.symmetric(horizontal: 12, vertical: 8),
+                        padding: EdgeInsets.symmetric(
+                          horizontal: 12,
+                          vertical: 8,
+                        ),
                         child: Row(
                           mainAxisSize: MainAxisSize.min,
                           children: [Icon(Icons.add, size: 16), Text(' Step')],
@@ -189,8 +220,10 @@ class _ScriptsPaneState extends ConsumerState<ScriptsPane> {
                     ),
                     FilledButton.icon(
                       onPressed: _script.steps.isEmpty ? null : _play,
-                      icon: Icon(_playing ? Icons.stop : Icons.play_arrow,
-                          size: 16),
+                      icon: Icon(
+                        _playing ? Icons.stop : Icons.play_arrow,
+                        size: 16,
+                      ),
                       label: Text(_playing ? 'Stop' : 'Play'),
                     ),
                     const SizedBox(width: 4),
@@ -219,8 +252,7 @@ class _ScriptsPaneState extends ConsumerState<ScriptsPane> {
                           child: TextFormField(
                             initialValue: '$_loops',
                             keyboardType: TextInputType.number,
-                            onChanged: (v) =>
-                                _loops = int.tryParse(v) ?? 1,
+                            onChanged: (v) => _loops = int.tryParse(v) ?? 1,
                           ),
                         ),
                       ],
@@ -259,7 +291,9 @@ class _ScriptsPaneState extends ConsumerState<ScriptsPane> {
                       subtitle: Text(
                         s.args.toString(),
                         style: const TextStyle(
-                            fontFamily: 'monospace', fontSize: 11),
+                          fontFamily: 'monospace',
+                          fontSize: 11,
+                        ),
                         overflow: TextOverflow.ellipsis,
                       ),
                       trailing: Row(
@@ -302,7 +336,8 @@ class _ScriptsPaneState extends ConsumerState<ScriptsPane> {
                   _ => Colors.lightBlueAccent,
                 };
                 final label = switch (e) {
-                  ScriptStepStarted() => 'start ${e.index + 1} ${e.step.type.toJson()}',
+                  ScriptStepStarted() =>
+                    'start ${e.index + 1} ${e.step.type.toJson()}',
                   ScriptStepCompleted(:final message) =>
                     'ok    ${e.index + 1} ${e.step.type.toJson()} ${message ?? ''}',
                   ScriptStepFailed(:final error) =>

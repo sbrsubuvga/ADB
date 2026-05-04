@@ -61,57 +61,70 @@ class _NetworkTabState extends ConsumerState<NetworkTab> {
             ActionChip(
               avatar: const Icon(Icons.wifi, size: 18),
               label: const Text('Wi-Fi on'),
-              onPressed: () => _toggle(
-                  () => kit.network.wifi(s, enabled: true), 'wifi on'),
+              onPressed: () =>
+                  _toggle(() => kit.network.wifi(s, enabled: true), 'wifi on'),
             ),
             ActionChip(
               avatar: const Icon(Icons.wifi_off, size: 18),
               label: const Text('Wi-Fi off'),
               onPressed: () => _toggle(
-                  () => kit.network.wifi(s, enabled: false), 'wifi off'),
+                () => kit.network.wifi(s, enabled: false),
+                'wifi off',
+              ),
             ),
             ActionChip(
               avatar: const Icon(Icons.signal_cellular_alt, size: 18),
               label: const Text('Cellular on'),
-              onPressed: () => _toggle(
-                  () => kit.network.data(s, enabled: true), 'data on'),
+              onPressed: () =>
+                  _toggle(() => kit.network.data(s, enabled: true), 'data on'),
             ),
             ActionChip(
               avatar: const Icon(Icons.signal_cellular_off, size: 18),
               label: const Text('Cellular off'),
               onPressed: () => _toggle(
-                  () => kit.network.data(s, enabled: false), 'data off'),
+                () => kit.network.data(s, enabled: false),
+                'data off',
+              ),
             ),
             ActionChip(
               avatar: const Icon(Icons.bluetooth, size: 18),
               label: const Text('Bluetooth on'),
               onPressed: () => _toggle(
-                  () => kit.network.bluetooth(s, enabled: true), 'bt on'),
+                () => kit.network.bluetooth(s, enabled: true),
+                'bt on',
+              ),
             ),
             ActionChip(
               avatar: const Icon(Icons.bluetooth_disabled, size: 18),
               label: const Text('Bluetooth off'),
               onPressed: () => _toggle(
-                  () => kit.network.bluetooth(s, enabled: false), 'bt off'),
+                () => kit.network.bluetooth(s, enabled: false),
+                'bt off',
+              ),
             ),
             ActionChip(
               avatar: const Icon(Icons.flight, size: 18),
               label: const Text('Airplane on'),
               onPressed: () => _toggle(
-                  () => kit.network.airplaneMode(s, enabled: true),
-                  'airplane on'),
+                () => kit.network.airplaneMode(s, enabled: true),
+                'airplane on',
+              ),
             ),
             ActionChip(
               avatar: const Icon(Icons.flight_takeoff, size: 18),
               label: const Text('Airplane off'),
               onPressed: () => _toggle(
-                  () => kit.network.airplaneMode(s, enabled: false),
-                  'airplane off'),
+                () => kit.network.airplaneMode(s, enabled: false),
+                'airplane off',
+              ),
             ),
           ],
         ),
         const Divider(height: 24),
-        const Text('Diagnostics', style: TextStyle(fontWeight: FontWeight.bold)),
+        const Text(
+          'Diagnostics',
+          style: TextStyle(fontWeight: FontWeight.bold),
+        ),
         const SizedBox(height: 4),
         Wrap(
           spacing: 8,

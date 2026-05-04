@@ -10,8 +10,9 @@ class ScrcpyService {
   Future<String> version() async {
     final r = await Process.run(path, ['--version']);
     if (r.exitCode != 0) {
-      throw ProcessException(path, ['--version'],
-          'scrcpy --version exit=${r.exitCode}: ${r.stderr}');
+      throw ProcessException(path, [
+        '--version',
+      ], 'scrcpy --version exit=${r.exitCode}: ${r.stderr}');
     }
     final out = (r.stdout as String).trim();
     return out.split('\n').first;
@@ -36,10 +37,6 @@ class ScrcpyService {
       if (maxFps != null) '--max-fps=$maxFps',
       if (title != null) '--window-title=$title',
     ];
-    return Process.start(
-      path,
-      args,
-      mode: ProcessStartMode.detachedWithStdio,
-    );
+    return Process.start(path, args, mode: ProcessStartMode.detachedWithStdio);
   }
 }

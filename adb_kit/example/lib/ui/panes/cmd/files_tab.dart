@@ -47,7 +47,10 @@ class _FilesTabState extends ConsumerState<FilesTab> {
                 onPressed: _path == '/'
                     ? null
                     : () {
-                        final segs = _path.split('/').where((s) => s.isNotEmpty).toList();
+                        final segs = _path
+                            .split('/')
+                            .where((s) => s.isNotEmpty)
+                            .toList();
                         if (segs.isEmpty) return;
                         segs.removeLast();
                         _navigate('/${segs.join('/')}');
@@ -67,10 +70,7 @@ class _FilesTabState extends ConsumerState<FilesTab> {
                 ),
               ),
               const SizedBox(width: 4),
-              IconButton(
-                onPressed: _refresh,
-                icon: const Icon(Icons.refresh),
-              ),
+              IconButton(onPressed: _refresh, icon: const Icon(Icons.refresh)),
               IconButton(
                 onPressed: _push,
                 tooltip: 'Push file',
@@ -125,10 +125,8 @@ class _FilesTabState extends ConsumerState<FilesTab> {
                       onSelected: (v) => _action(e, v),
                       itemBuilder: (_) => const [
                         PopupMenuItem(value: 'pull', child: Text('Pull…')),
-                        PopupMenuItem(
-                            value: 'delete', child: Text('Delete')),
-                        PopupMenuItem(
-                            value: 'rename', child: Text('Rename')),
+                        PopupMenuItem(value: 'delete', child: Text('Delete')),
+                        PopupMenuItem(value: 'rename', child: Text('Rename')),
                       ],
                     ),
                   );
@@ -171,11 +169,13 @@ class _FilesTabState extends ConsumerState<FilesTab> {
         content: TextField(controller: ctrl, autofocus: true),
         actions: [
           TextButton(
-              onPressed: () => Navigator.of(ctx).pop(false),
-              child: const Text('Cancel')),
+            onPressed: () => Navigator.of(ctx).pop(false),
+            child: const Text('Cancel'),
+          ),
           FilledButton(
-              onPressed: () => Navigator.of(ctx).pop(true),
-              child: const Text('Create')),
+            onPressed: () => Navigator.of(ctx).pop(true),
+            child: const Text('Create'),
+          ),
         ],
       ),
     );
@@ -209,11 +209,13 @@ class _FilesTabState extends ConsumerState<FilesTab> {
               content: TextField(controller: ctrl, autofocus: true),
               actions: [
                 TextButton(
-                    onPressed: () => Navigator.of(ctx).pop(false),
-                    child: const Text('Cancel')),
+                  onPressed: () => Navigator.of(ctx).pop(false),
+                  child: const Text('Cancel'),
+                ),
                 FilledButton(
-                    onPressed: () => Navigator.of(ctx).pop(true),
-                    child: const Text('Rename')),
+                  onPressed: () => Navigator.of(ctx).pop(true),
+                  child: const Text('Rename'),
+                ),
               ],
             ),
           );
@@ -235,11 +237,13 @@ class _FilesTabState extends ConsumerState<FilesTab> {
         content: Text(message),
         actions: [
           TextButton(
-              onPressed: () => Navigator.of(ctx).pop(false),
-              child: const Text('Cancel')),
+            onPressed: () => Navigator.of(ctx).pop(false),
+            child: const Text('Cancel'),
+          ),
           FilledButton(
-              onPressed: () => Navigator.of(ctx).pop(true),
-              child: const Text('Delete')),
+            onPressed: () => Navigator.of(ctx).pop(true),
+            child: const Text('Delete'),
+          ),
         ],
       ),
     );
@@ -248,7 +252,6 @@ class _FilesTabState extends ConsumerState<FilesTab> {
 
   void _snack(String msg) {
     if (!mounted) return;
-    ScaffoldMessenger.of(context)
-        .showSnackBar(SnackBar(content: Text(msg)));
+    ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text(msg)));
   }
 }

@@ -19,7 +19,10 @@ class DevicePicker extends ConsumerWidget {
           padding: const EdgeInsets.all(8),
           child: Row(
             children: [
-              const Text('Devices', style: TextStyle(fontWeight: FontWeight.bold)),
+              const Text(
+                'Devices',
+                style: TextStyle(fontWeight: FontWeight.bold),
+              ),
               const Spacer(),
               IconButton(
                 tooltip: 'Refresh',
@@ -31,7 +34,10 @@ class DevicePicker extends ConsumerWidget {
                 icon: const Icon(Icons.add, size: 18),
                 onSelected: (choice) => _handleAdd(context, ref, choice),
                 itemBuilder: (_) => const [
-                  PopupMenuItem(value: 'connect', child: Text('Connect TCP/IP…')),
+                  PopupMenuItem(
+                    value: 'connect',
+                    child: Text('Connect TCP/IP…'),
+                  ),
                   PopupMenuItem(value: 'pair', child: Text('Pair Wireless…')),
                   PopupMenuItem(value: 'tcpip', child: Text('Enable tcpip')),
                 ],
@@ -64,7 +70,10 @@ class DevicePicker extends ConsumerWidget {
                     selected: sel,
                     dense: true,
                     leading: _stateIcon(d.state),
-                    title: Text(d.model ?? d.serial, overflow: TextOverflow.ellipsis),
+                    title: Text(
+                      d.model ?? d.serial,
+                      overflow: TextOverflow.ellipsis,
+                    ),
                     subtitle: Text(
                       '${d.serial} · ${d.state.name}',
                       style: const TextStyle(fontSize: 11),
@@ -75,15 +84,21 @@ class DevicePicker extends ConsumerWidget {
                           _handleDeviceAction(context, ref, d, action),
                       itemBuilder: (_) => [
                         const PopupMenuItem(
-                            value: 'reboot', child: Text('Reboot')),
+                          value: 'reboot',
+                          child: Text('Reboot'),
+                        ),
                         const PopupMenuItem(
-                            value: 'reboot_bl',
-                            child: Text('Reboot to bootloader')),
+                          value: 'reboot_bl',
+                          child: Text('Reboot to bootloader'),
+                        ),
                         const PopupMenuItem(
-                            value: 'reboot_rec',
-                            child: Text('Reboot to recovery')),
+                          value: 'reboot_rec',
+                          child: Text('Reboot to recovery'),
+                        ),
                         const PopupMenuItem(
-                            value: 'disconnect', child: Text('Disconnect')),
+                          value: 'disconnect',
+                          child: Text('Disconnect'),
+                        ),
                       ],
                     ),
                     onTap: () {
@@ -122,25 +137,38 @@ class DevicePicker extends ConsumerWidget {
   }
 
   Future<void> _handleAdd(
-      BuildContext context, WidgetRef ref, String choice) async {
+    BuildContext context,
+    WidgetRef ref,
+    String choice,
+  ) async {
     final kit = ref.read(adbKitProvider);
     switch (choice) {
       case 'connect':
-        final addr = await _promptText(context, 'Host:port', 'e.g. 192.168.1.42:5555');
+        final addr = await _promptText(
+          context,
+          'Host:port',
+          'e.g. 192.168.1.42:5555',
+        );
         if (addr == null) return;
         final parts = addr.split(':');
         if (parts.length != 2) return;
-        await kit.devices.connect(parts[0], port: int.tryParse(parts[1]) ?? 5555);
+        await kit.devices.connect(
+          parts[0],
+          port: int.tryParse(parts[1]) ?? 5555,
+        );
       case 'pair':
-        final addr = await _promptText(context, 'Pair host:port', '192.168.1.42:37421');
+        final addr = await _promptText(
+          context,
+          'Pair host:port',
+          '192.168.1.42:37421',
+        );
         if (addr == null) return;
         if (!context.mounted) return;
         final code = await _promptText(context, 'Pairing code', '6-digit code');
         if (code == null) return;
         final parts = addr.split(':');
         if (parts.length != 2) return;
-        await kit.devices.pair(
-            parts[0], int.tryParse(parts[1]) ?? 5555, code);
+        await kit.devices.pair(parts[0], int.tryParse(parts[1]) ?? 5555, code);
       case 'tcpip':
         final portStr = await _promptText(context, 'tcpip port', '5555');
         if (portStr == null) return;
@@ -162,7 +190,10 @@ class DevicePicker extends ConsumerWidget {
         case 'reboot':
           await kit.power.reboot(device.serial);
         case 'reboot_bl':
-          await kit.power.reboot(device.serial, target: RebootTarget.bootloader);
+          await kit.power.reboot(
+            device.serial,
+            target: RebootTarget.bootloader,
+          );
         case 'reboot_rec':
           await kit.power.reboot(device.serial, target: RebootTarget.recovery);
         case 'disconnect':
@@ -170,14 +201,18 @@ class DevicePicker extends ConsumerWidget {
       }
     } catch (e) {
       if (context.mounted) {
-        ScaffoldMessenger.of(context)
-            .showSnackBar(SnackBar(content: Text('$action failed: $e')));
+        ScaffoldMessenger.of(
+          context,
+        ).showSnackBar(SnackBar(content: Text('$action failed: $e')));
       }
     }
   }
 
   Future<String?> _promptText(
-      BuildContext context, String title, String hint) async {
+    BuildContext context,
+    String title,
+    String hint,
+  ) async {
     final controller = TextEditingController();
     final result = await showDialog<String>(
       context: context,
@@ -191,10 +226,13 @@ class DevicePicker extends ConsumerWidget {
         ),
         actions: [
           TextButton(
-              onPressed: () => Navigator.of(ctx).pop(), child: const Text('Cancel')),
+            onPressed: () => Navigator.of(ctx).pop(),
+            child: const Text('Cancel'),
+          ),
           TextButton(
-              onPressed: () => Navigator.of(ctx).pop(controller.text.trim()),
-              child: const Text('OK')),
+            onPressed: () => Navigator.of(ctx).pop(controller.text.trim()),
+            child: const Text('OK'),
+          ),
         ],
       ),
     );
@@ -209,11 +247,13 @@ class DevicePicker extends ConsumerWidget {
         content: Text(message),
         actions: [
           TextButton(
-              onPressed: () => Navigator.of(ctx).pop(false),
-              child: const Text('Cancel')),
+            onPressed: () => Navigator.of(ctx).pop(false),
+            child: const Text('Cancel'),
+          ),
           FilledButton(
-              onPressed: () => Navigator.of(ctx).pop(true),
-              child: const Text('Run')),
+            onPressed: () => Navigator.of(ctx).pop(true),
+            child: const Text('Run'),
+          ),
         ],
       ),
     );

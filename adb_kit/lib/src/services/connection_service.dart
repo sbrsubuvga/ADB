@@ -42,8 +42,7 @@ class ConnectionService {
   Future<void> forwardRemove(String serial, String local) =>
       _runner.runOk(['forward', '--remove', local], serial: serial);
 
-  Future<void> forwardRemoveAll() =>
-      _runner.runOk(['forward', '--remove-all']);
+  Future<void> forwardRemoveAll() => _runner.runOk(['forward', '--remove-all']);
 
   Future<List<PortForward>> reverseList(String serial) async {
     final out = await _runner.runOk(['reverse', '--list'], serial: serial);

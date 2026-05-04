@@ -19,7 +19,8 @@ class BackupService {
       _runner.runOk(
         [
           'backup',
-          '-f', localPath,
+          '-f',
+          localPath,
           if (includeApk) '-apk' else '-noapk',
           if (includeObb) '-obb' else '-noobb',
           if (includeShared) '-shared' else '-noshared',

@@ -57,7 +57,14 @@ class ScreenService {
 
   /// PNG magic header — `89 50 4E 47 0D 0A 1A 0A`.
   static const _pngSignature = [
-    0x89, 0x50, 0x4E, 0x47, 0x0D, 0x0A, 0x1A, 0x0A,
+    0x89,
+    0x50,
+    0x4E,
+    0x47,
+    0x0D,
+    0x0A,
+    0x1A,
+    0x0A,
   ];
 
   /// Returns true if the given bytes start with the PNG signature.
@@ -74,8 +81,10 @@ class ScreenService {
   /// Returns null if the buffer is too short or not a PNG.
   static (int, int)? readPngDimensions(List<int> bytes) {
     if (!isPng(bytes) || bytes.length < 24) return null;
-    final w = (bytes[16] << 24) | (bytes[17] << 16) | (bytes[18] << 8) | bytes[19];
-    final h = (bytes[20] << 24) | (bytes[21] << 16) | (bytes[22] << 8) | bytes[23];
+    final w =
+        (bytes[16] << 24) | (bytes[17] << 16) | (bytes[18] << 8) | bytes[19];
+    final h =
+        (bytes[20] << 24) | (bytes[21] << 16) | (bytes[22] << 8) | bytes[23];
     if (w <= 0 || h <= 0) return null;
     return (w, h);
   }

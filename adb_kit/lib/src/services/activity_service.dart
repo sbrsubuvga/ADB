@@ -10,8 +10,7 @@ class ActivityService {
         serial: serial,
       );
 
-  Future<String> startService(String serial, IntentSpec spec) =>
-      _runner.runOk(
+  Future<String> startService(String serial, IntentSpec spec) => _runner.runOk(
         ['shell', 'am', 'start-service', ...spec.toArgs()],
         serial: serial,
       );

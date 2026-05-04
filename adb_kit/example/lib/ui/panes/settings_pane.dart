@@ -83,9 +83,12 @@ class _SettingsDialogState extends ConsumerState<SettingsDialog> {
         continue;
       }
     }
-    setState(() => _scrcpyError = 'scrcpy not found. Install with '
-        '`brew install scrcpy`, `apt install scrcpy`, or '
-        '`winget install scrcpy`.');
+    setState(
+      () => _scrcpyError =
+          'scrcpy not found. Install with '
+          '`brew install scrcpy`, `apt install scrcpy`, or '
+          '`winget install scrcpy`.',
+    );
   }
 
   Future<void> _browse(TextEditingController target) async {
@@ -128,7 +131,8 @@ class _SettingsDialogState extends ConsumerState<SettingsDialog> {
             ),
             const SizedBox(height: 16),
             _binaryRow(
-              label: 'scrcpy binary path '
+              label:
+                  'scrcpy binary path '
                   '(optional, used to mirror overlay/secondary displays)',
               controller: _scrcpyPathCtrl,
               onDetect: _detectScrcpy,
@@ -146,8 +150,9 @@ class _SettingsDialogState extends ConsumerState<SettingsDialog> {
       ),
       actions: [
         TextButton(
-            onPressed: () => Navigator.of(context).pop(),
-            child: const Text('Cancel')),
+          onPressed: () => Navigator.of(context).pop(),
+          child: const Text('Cancel'),
+        ),
         FilledButton(onPressed: _save, child: const Text('Save')),
       ],
     );
@@ -192,14 +197,18 @@ class _SettingsDialogState extends ConsumerState<SettingsDialog> {
         if (detected != null)
           Padding(
             padding: const EdgeInsets.only(top: 4),
-            child: Text('Detected: $detected',
-                style: const TextStyle(color: Colors.green, fontSize: 12)),
+            child: Text(
+              'Detected: $detected',
+              style: const TextStyle(color: Colors.green, fontSize: 12),
+            ),
           ),
         if (error != null)
           Padding(
             padding: const EdgeInsets.only(top: 4),
-            child: Text(error,
-                style: const TextStyle(color: Colors.red, fontSize: 12)),
+            child: Text(
+              error,
+              style: const TextStyle(color: Colors.red, fontSize: 12),
+            ),
           ),
       ],
     );

@@ -82,8 +82,7 @@ class DumpsysService {
   Future<String> alarm(String serial) => raw(serial, ['alarm']);
 
   /// Full bugreport.
-  Future<String> bugreport(String serial, String localPath) =>
-      _runner.runOk(
+  Future<String> bugreport(String serial, String localPath) => _runner.runOk(
         ['bugreport', localPath],
         serial: serial,
         timeout: const Duration(minutes: 10),

@@ -1,12 +1,20 @@
 import '../runner/adb_runner.dart';
 
-enum RebootTarget { normal, bootloader, recovery, sideload, sideloadAutoReboot, fastboot }
+enum RebootTarget {
+  normal,
+  bootloader,
+  recovery,
+  sideload,
+  sideloadAutoReboot,
+  fastboot
+}
 
 class PowerService {
   PowerService(this._runner);
   final AdbRunner _runner;
 
-  Future<void> reboot(String serial, {RebootTarget target = RebootTarget.normal}) {
+  Future<void> reboot(String serial,
+      {RebootTarget target = RebootTarget.normal}) {
     String? arg;
     switch (target) {
       case RebootTarget.normal:
@@ -32,9 +40,8 @@ class PowerService {
   Future<void> screenOff(String serial) =>
       _runner.runOk(['shell', 'input', 'keyevent', '26'], serial: serial);
 
-  Future<void> wake(String serial) =>
-      _runner.runOk(['shell', 'input', 'keyevent', 'KEYCODE_WAKEUP'],
-          serial: serial);
+  Future<void> wake(String serial) => _runner
+      .runOk(['shell', 'input', 'keyevent', 'KEYCODE_WAKEUP'], serial: serial);
 
   Future<void> forceIdle(String serial) => _runner.runOk(
         ['shell', 'dumpsys', 'deviceidle', 'force-idle'],

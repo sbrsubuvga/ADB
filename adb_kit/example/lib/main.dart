@@ -12,12 +12,12 @@ Future<void> main() async {
   // recorded stream of secondary/virtual displays).
   MediaKit.ensureInitialized();
   final prefs = await SharedPreferences.getInstance();
-  runApp(ProviderScope(
-    overrides: [
-      sharedPrefsProvider.overrideWithValue(prefs),
-    ],
-    child: const AdbVisionApp(),
-  ));
+  runApp(
+    ProviderScope(
+      overrides: [sharedPrefsProvider.overrideWithValue(prefs)],
+      child: const AdbVisionApp(),
+    ),
+  );
 }
 
 class AdbVisionApp extends StatelessWidget {

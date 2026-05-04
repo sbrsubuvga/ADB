@@ -127,8 +127,9 @@ class _InputTabState extends ConsumerState<InputTab> {
       _textCtrl.clear();
     } catch (e) {
       if (mounted) {
-        ScaffoldMessenger.of(context)
-            .showSnackBar(SnackBar(content: Text('text failed: $e')));
+        ScaffoldMessenger.of(
+          context,
+        ).showSnackBar(SnackBar(content: Text('text failed: $e')));
       }
     }
   }

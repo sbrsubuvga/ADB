@@ -22,8 +22,7 @@ class ActionLogPane extends ConsumerWidget {
               ),
               const Spacer(),
               IconButton(
-                onPressed: () =>
-                    ref.read(actionLogProvider.notifier).clear(),
+                onPressed: () => ref.read(actionLogProvider.notifier).clear(),
                 icon: const Icon(Icons.delete_outline),
                 tooltip: 'Clear',
               ),
@@ -40,9 +39,7 @@ class ActionLogPane extends ConsumerWidget {
               itemBuilder: (ctx, i) {
                 final e = entries[i];
                 final color = e.kind == 'end'
-                    ? (e.exitCode == 0
-                        ? Colors.greenAccent
-                        : Colors.redAccent)
+                    ? (e.exitCode == 0 ? Colors.greenAccent : Colors.redAccent)
                     : Colors.lightBlueAccent;
                 final ts = e.timestamp.toIso8601String().substring(11, 23);
                 final kindTag = e.kind == 'end'
@@ -51,7 +48,8 @@ class ActionLogPane extends ConsumerWidget {
                 return InkWell(
                   onTap: () {
                     Clipboard.setData(
-                        ClipboardData(text: 'adb ${e.commandLine}'));
+                      ClipboardData(text: 'adb ${e.commandLine}'),
+                    );
                   },
                   child: Padding(
                     padding: const EdgeInsets.symmetric(vertical: 1),

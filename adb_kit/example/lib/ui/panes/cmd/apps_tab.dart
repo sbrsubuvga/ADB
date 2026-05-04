@@ -105,9 +105,7 @@ class _AppsTabState extends ConsumerState<AppsTab> {
                     selected: _filter.disabledOnly,
                     onSelected: (v) {
                       setState(() {
-                        _filter = PackageListFilter(
-                          disabledOnly: v,
-                        );
+                        _filter = PackageListFilter(disabledOnly: v);
                       });
                       _refresh();
                     },
@@ -152,12 +150,19 @@ class _AppsTabState extends ConsumerState<AppsTab> {
                       itemBuilder: (_) => const [
                         PopupMenuItem(value: 'launch', child: Text('Launch')),
                         PopupMenuItem(
-                            value: 'force-stop', child: Text('Force-stop')),
-                        PopupMenuItem(value: 'clear', child: Text('Clear data')),
+                          value: 'force-stop',
+                          child: Text('Force-stop'),
+                        ),
+                        PopupMenuItem(
+                          value: 'clear',
+                          child: Text('Clear data'),
+                        ),
                         PopupMenuItem(value: 'disable', child: Text('Disable')),
                         PopupMenuItem(value: 'enable', child: Text('Enable')),
                         PopupMenuItem(
-                            value: 'uninstall', child: Text('Uninstall')),
+                          value: 'uninstall',
+                          child: Text('Uninstall'),
+                        ),
                         PopupMenuItem(value: 'dump', child: Text('Dump info')),
                       ],
                     ),
@@ -224,9 +229,13 @@ class _AppsTabState extends ConsumerState<AppsTab> {
                   height: 600,
                   child: SingleChildScrollView(
                     padding: const EdgeInsets.all(12),
-                    child: SelectableText(dump,
-                        style: const TextStyle(
-                            fontFamily: 'monospace', fontSize: 11)),
+                    child: SelectableText(
+                      dump,
+                      style: const TextStyle(
+                        fontFamily: 'monospace',
+                        fontSize: 11,
+                      ),
+                    ),
                   ),
                 ),
               ),
@@ -247,11 +256,13 @@ class _AppsTabState extends ConsumerState<AppsTab> {
         content: Text(message),
         actions: [
           TextButton(
-              onPressed: () => Navigator.of(ctx).pop(false),
-              child: const Text('Cancel')),
+            onPressed: () => Navigator.of(ctx).pop(false),
+            child: const Text('Cancel'),
+          ),
           FilledButton(
-              onPressed: () => Navigator.of(ctx).pop(true),
-              child: const Text('Run')),
+            onPressed: () => Navigator.of(ctx).pop(true),
+            child: const Text('Run'),
+          ),
         ],
       ),
     );
@@ -260,7 +271,6 @@ class _AppsTabState extends ConsumerState<AppsTab> {
 
   void _snack(String msg) {
     if (!mounted) return;
-    ScaffoldMessenger.of(context)
-        .showSnackBar(SnackBar(content: Text(msg)));
+    ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text(msg)));
   }
 }

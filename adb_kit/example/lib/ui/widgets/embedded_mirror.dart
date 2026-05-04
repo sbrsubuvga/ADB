@@ -174,9 +174,11 @@ class _EmbeddedMirrorState extends ConsumerState<EmbeddedMirror> {
               children: [
                 Row(
                   children: [
-                    Icon(Icons.lock_outline,
-                        size: 28,
-                        color: Theme.of(context).colorScheme.primary),
+                    Icon(
+                      Icons.lock_outline,
+                      size: 28,
+                      color: Theme.of(context).colorScheme.primary,
+                    ),
                     const SizedBox(width: 8),
                     const Text(
                       'This display can\'t be mirrored',
@@ -197,12 +199,10 @@ class _EmbeddedMirrorState extends ConsumerState<EmbeddedMirror> {
                   children: [
                     FilledButton.icon(
                       onPressed: () async {
-                        ref.read(embedSecondaryProvider.notifier).state =
-                            false;
-                        await ref.read(sharedPrefsProvider).setBool(
-                              'embed_secondary',
-                              false,
-                            );
+                        ref.read(embedSecondaryProvider.notifier).state = false;
+                        await ref
+                            .read(sharedPrefsProvider)
+                            .setBool('embed_secondary', false);
                       },
                       icon: const Icon(Icons.visibility_off, size: 16),
                       label: const Text('Switch to input-only mode'),
@@ -232,8 +232,10 @@ class _EmbeddedMirrorState extends ConsumerState<EmbeddedMirror> {
               children: [
                 const Icon(Icons.error_outline, size: 24),
                 const SizedBox(width: 8),
-                const Text('Embedded mirror failed',
-                    style: TextStyle(fontWeight: FontWeight.bold)),
+                const Text(
+                  'Embedded mirror failed',
+                  style: TextStyle(fontWeight: FontWeight.bold),
+                ),
                 const SizedBox(width: 12),
                 FilledButton.icon(
                   onPressed: _start,
@@ -261,10 +263,7 @@ class _EmbeddedMirrorState extends ConsumerState<EmbeddedMirror> {
                 padding: const EdgeInsets.all(8),
                 child: Scrollbar(
                   child: SingleChildScrollView(
-                    child: SelectableText(
-                      _error!,
-                      style: _logFontStyle,
-                    ),
+                    child: SelectableText(_error!, style: _logFontStyle),
                   ),
                 ),
               ),
@@ -286,61 +285,60 @@ class _EmbeddedMirrorState extends ConsumerState<EmbeddedMirror> {
       );
     }
 
-    return LayoutBuilder(builder: (ctx, constraints) {
-      // Stream resolution is reported by libmpv once frames start flowing;
-      // until then fall back to the display's logical dims.
-      final streamW = _player.state.width ?? widget.display.width;
-      final streamH = _player.state.height ?? widget.display.height;
-      final widgetSize = _fittedSize(
-        constraints.biggest,
-        Size(streamW.toDouble(), streamH.toDouble()),
-      );
-      final mapper = CoordinateMapper(
-        displayWidth: streamW.toDouble(),
-        displayHeight: streamH.toDouble(),
-        widgetWidth: widgetSize.width,
-        widgetHeight: widgetSize.height,
-      );
+    return LayoutBuilder(
+      builder: (ctx, constraints) {
+        // Stream resolution is reported by libmpv once frames start flowing;
+        // until then fall back to the display's logical dims.
+        final streamW = _player.state.width ?? widget.display.width;
+        final streamH = _player.state.height ?? widget.display.height;
+        final widgetSize = _fittedSize(
+          constraints.biggest,
+          Size(streamW.toDouble(), streamH.toDouble()),
+        );
+        final mapper = CoordinateMapper(
+          displayWidth: streamW.toDouble(),
+          displayHeight: streamH.toDouble(),
+          widgetWidth: widgetSize.width,
+          widgetHeight: widgetSize.height,
+        );
 
-      return Focus(
-        focusNode: _focusNode,
-        autofocus: true,
-        onKeyEvent: (node, event) => _handleKey(event),
-        child: GestureDetector(
-          onTap: _focusNode.requestFocus,
-          child: MouseRegion(
-            onHover: (e) => setState(() => _lastHover = e.localPosition),
-            child: Center(
-              child: SizedBox(
-                width: widgetSize.width,
-                height: widgetSize.height,
-                child: Stack(
-                  fit: StackFit.expand,
-                  children: [
-                    ColoredBox(color: Theme.of(context).colorScheme.surface),
-                    Video(
-                      controller: _controller,
-                      controls: NoVideoControls,
-                      fit: BoxFit.fill,
-                    ),
-                    _buildInputLayer(mapper),
-                    if (_lastHover != null)
-                      Positioned(
-                        right: 8,
-                        bottom: 8,
-                        child: _Hud(
-                          mapper: mapper,
-                          position: _lastHover!,
-                        ),
+        return Focus(
+          focusNode: _focusNode,
+          autofocus: true,
+          onKeyEvent: (node, event) => _handleKey(event),
+          child: GestureDetector(
+            onTap: _focusNode.requestFocus,
+            child: MouseRegion(
+              onHover: (e) => setState(() => _lastHover = e.localPosition),
+              child: Center(
+                child: SizedBox(
+                  width: widgetSize.width,
+                  height: widgetSize.height,
+                  child: Stack(
+                    fit: StackFit.expand,
+                    children: [
+                      ColoredBox(color: Theme.of(context).colorScheme.surface),
+                      Video(
+                        controller: _controller,
+                        controls: NoVideoControls,
+                        fit: BoxFit.fill,
                       ),
-                  ],
+                      _buildInputLayer(mapper),
+                      if (_lastHover != null)
+                        Positioned(
+                          right: 8,
+                          bottom: 8,
+                          child: _Hud(mapper: mapper, position: _lastHover!),
+                        ),
+                    ],
+                  ),
                 ),
               ),
             ),
           ),
-        ),
-      );
-    });
+        );
+      },
+    );
   }
 
   Widget _buildInputLayer(CoordinateMapper mapper) {
@@ -374,7 +372,10 @@ class _EmbeddedMirrorState extends ConsumerState<EmbeddedMirror> {
           await _tap(x1, y1);
         } else {
           final duration = CoordinateMapper.estimateSwipeDuration(
-            x1, y1, x2, y2,
+            x1,
+            y1,
+            x2,
+            y2,
             DateTime.now().difference(startTime),
           );
           await _swipe(x1, y1, x2, y2, duration);
@@ -382,8 +383,10 @@ class _EmbeddedMirrorState extends ConsumerState<EmbeddedMirror> {
       },
       onPointerSignal: (signal) {
         if (signal is PointerScrollEvent) {
-          final (cx, cy) =
-              mapper.map(signal.localPosition.dx, signal.localPosition.dy);
+          final (cx, cy) = mapper.map(
+            signal.localPosition.dx,
+            signal.localPosition.dy,
+          );
           final dy = signal.scrollDelta.dy;
           final target = (dy * 2).clamp(-400.0, 400.0).round();
           _swipe(cx, cy, cx, cy - target, 150);
@@ -398,7 +401,8 @@ class _EmbeddedMirrorState extends ConsumerState<EmbeddedMirror> {
     try {
       await kit.input.tap(
         widget.device.serial,
-        x: x, y: y,
+        x: x,
+        y: y,
         displayId: widget.display.isPrimary ? null : widget.display.id,
       );
     } catch (_) {}
@@ -409,7 +413,10 @@ class _EmbeddedMirrorState extends ConsumerState<EmbeddedMirror> {
     try {
       await kit.input.swipe(
         widget.device.serial,
-        x1: x1, y1: y1, x2: x2, y2: y2,
+        x1: x1,
+        y1: y1,
+        x2: x2,
+        y2: y2,
         durationMs: durationMs,
         displayId: widget.display.isPrimary ? null : widget.display.id,
       );
@@ -420,7 +427,8 @@ class _EmbeddedMirrorState extends ConsumerState<EmbeddedMirror> {
     final kit = ref.read(adbKitProvider);
     try {
       await kit.input.keyEvent(
-        widget.device.serial, k,
+        widget.device.serial,
+        k,
         displayId: widget.display.isPrimary ? null : widget.display.id,
       );
     } catch (_) {}
@@ -443,21 +451,23 @@ class _EmbeddedMirrorState extends ConsumerState<EmbeddedMirror> {
     final mapped = physicalMap[event.logicalKey];
     final dispId = widget.display.isPrimary ? null : widget.display.id;
     if (mapped != null) {
-      unawaited(kit.input.keyEvent(widget.device.serial, mapped,
-          displayId: dispId));
+      unawaited(
+        kit.input.keyEvent(widget.device.serial, mapped, displayId: dispId),
+      );
       return KeyEventResult.handled;
     }
     if (ch != null && ch.isNotEmpty) {
-      unawaited(
-          kit.input.text(widget.device.serial, ch, displayId: dispId));
+      unawaited(kit.input.text(widget.device.serial, ch, displayId: dispId));
       return KeyEventResult.handled;
     }
     return KeyEventResult.ignored;
   }
 
   Size _fittedSize(Size avail, Size content) {
-    final scale = (avail.width / content.width)
-        .clamp(0.0, avail.height / content.height);
+    final scale = (avail.width / content.width).clamp(
+      0.0,
+      avail.height / content.height,
+    );
     return Size(content.width * scale, content.height * scale);
   }
 }
@@ -476,8 +486,10 @@ class _Hud extends StatelessWidget {
         color: Colors.black.withValues(alpha: 0.6),
         borderRadius: BorderRadius.circular(4),
       ),
-      child: Text('($dx, $dy)',
-          style: const TextStyle(color: Colors.white, fontSize: 11)),
+      child: Text(
+        '($dx, $dy)',
+        style: const TextStyle(color: Colors.white, fontSize: 11),
+      ),
     );
   }
 }

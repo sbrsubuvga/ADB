@@ -75,16 +75,14 @@ class SettingsService {
     await put(serial, SettingsNamespace.global, 'window_animation_scale', '0');
     await put(
         serial, SettingsNamespace.global, 'transition_animation_scale', '0');
-    await put(
-        serial, SettingsNamespace.global, 'animator_duration_scale', '0');
+    await put(serial, SettingsNamespace.global, 'animator_duration_scale', '0');
   }
 
   Future<void> restoreAnimations(String serial) async {
     await put(serial, SettingsNamespace.global, 'window_animation_scale', '1');
     await put(
         serial, SettingsNamespace.global, 'transition_animation_scale', '1');
-    await put(
-        serial, SettingsNamespace.global, 'animator_duration_scale', '1');
+    await put(serial, SettingsNamespace.global, 'animator_duration_scale', '1');
   }
 
   Future<void> setDarkMode(String serial, bool enabled) => _runner.runOk(

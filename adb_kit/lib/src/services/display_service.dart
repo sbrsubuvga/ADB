@@ -27,8 +27,7 @@ class DisplayService {
 
     // Make sure every id reported by `cmd display list-displays` is present,
     // even if the dumpsys parser missed it.
-    final cmdOut =
-        await run(['shell', 'cmd', 'display', 'list-displays']);
+    final cmdOut = await run(['shell', 'cmd', 'display', 'list-displays']);
     for (final id in AdbDisplay.parseCmdDisplayList(cmdOut)) {
       byId.putIfAbsent(
         id,
@@ -57,14 +56,12 @@ class DisplayService {
       }
     }
 
-    final list = byId.values.toList()
-      ..sort((a, b) => a.id.compareTo(b.id));
+    final list = byId.values.toList()..sort((a, b) => a.id.compareTo(b.id));
     return list;
   }
 
-  Future<void> setSize(String serial, int width, int height) =>
-      _runner.runOk(['shell', 'wm', 'size', '${width}x$height'],
-          serial: serial);
+  Future<void> setSize(String serial, int width, int height) => _runner
+      .runOk(['shell', 'wm', 'size', '${width}x$height'], serial: serial);
 
   Future<void> resetSize(String serial) =>
       _runner.runOk(['shell', 'wm', 'size', 'reset'], serial: serial);
@@ -85,8 +82,7 @@ class DisplayService {
 
   /// Android 10+ secondary display simulation.
   /// [spec] is e.g. `1080x1920/320` or several joined by `;`.
-  Future<void> setOverlayDisplays(String serial, String spec) =>
-      _runner.runOk(
+  Future<void> setOverlayDisplays(String serial, String spec) => _runner.runOk(
         ['shell', 'settings', 'put', 'global', 'overlay_display_devices', spec],
         serial: serial,
       );

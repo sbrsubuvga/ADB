@@ -17,33 +17,67 @@ class Hotbar extends ConsumerWidget {
       scrollDirection: Axis.horizontal,
       child: Row(
         children: [
-          _btn(Icons.arrow_back, 'Back',
-              () => kit.input.keyEvent(device.serial, KeyCode.back)),
-          _btn(Icons.home, 'Home',
-              () => kit.input.keyEvent(device.serial, KeyCode.home)),
-          _btn(Icons.more_horiz, 'Recents',
-              () => kit.input.keyEvent(device.serial, KeyCode.appSwitch)),
+          _btn(
+            Icons.arrow_back,
+            'Back',
+            () => kit.input.keyEvent(device.serial, KeyCode.back),
+          ),
+          _btn(
+            Icons.home,
+            'Home',
+            () => kit.input.keyEvent(device.serial, KeyCode.home),
+          ),
+          _btn(
+            Icons.more_horiz,
+            'Recents',
+            () => kit.input.keyEvent(device.serial, KeyCode.appSwitch),
+          ),
           const VerticalDivider(width: 1),
-          _btn(Icons.power_settings_new, 'Power',
-              () => kit.input.keyEvent(device.serial, KeyCode.power)),
-          _btn(Icons.bedtime_outlined, 'Sleep',
-              () => kit.input.keyEvent(device.serial, KeyCode.sleep)),
-          _btn(Icons.wb_sunny_outlined, 'Wake',
-              () => kit.input.keyEvent(device.serial, KeyCode.wakeup)),
+          _btn(
+            Icons.power_settings_new,
+            'Power',
+            () => kit.input.keyEvent(device.serial, KeyCode.power),
+          ),
+          _btn(
+            Icons.bedtime_outlined,
+            'Sleep',
+            () => kit.input.keyEvent(device.serial, KeyCode.sleep),
+          ),
+          _btn(
+            Icons.wb_sunny_outlined,
+            'Wake',
+            () => kit.input.keyEvent(device.serial, KeyCode.wakeup),
+          ),
           const VerticalDivider(width: 1),
-          _btn(Icons.volume_up, 'Vol +',
-              () => kit.input.keyEvent(device.serial, KeyCode.volumeUp)),
-          _btn(Icons.volume_down, 'Vol -',
-              () => kit.input.keyEvent(device.serial, KeyCode.volumeDown)),
-          _btn(Icons.volume_off, 'Mute',
-              () => kit.input.keyEvent(device.serial, KeyCode.volumeMute)),
+          _btn(
+            Icons.volume_up,
+            'Vol +',
+            () => kit.input.keyEvent(device.serial, KeyCode.volumeUp),
+          ),
+          _btn(
+            Icons.volume_down,
+            'Vol -',
+            () => kit.input.keyEvent(device.serial, KeyCode.volumeDown),
+          ),
+          _btn(
+            Icons.volume_off,
+            'Mute',
+            () => kit.input.keyEvent(device.serial, KeyCode.volumeMute),
+          ),
           const VerticalDivider(width: 1),
           _btn(Icons.screen_rotation, 'Rotate', () async {
             final cur = await kit.settings.get(
-                device.serial, SettingsNamespace.system, 'user_rotation');
+              device.serial,
+              SettingsNamespace.system,
+              'user_rotation',
+            );
             final next = (int.tryParse(cur) ?? 0 + 1) % 4;
-            await kit.settings.put(device.serial, SettingsNamespace.system,
-                'user_rotation', '$next');
+            await kit.settings.put(
+              device.serial,
+              SettingsNamespace.system,
+              'user_rotation',
+              '$next',
+            );
           }),
           _btn(Icons.photo_camera, 'Screenshot', () async {
             final dir = await getApplicationDocumentsDirectory();
@@ -51,8 +85,9 @@ class Hotbar extends ConsumerWidget {
                 '${dir.path}/adb_vision/screenshot_${DateTime.now().millisecondsSinceEpoch}.png';
             await kit.screen.screenshotTo(device.serial, path);
             if (context.mounted) {
-              ScaffoldMessenger.of(context)
-                  .showSnackBar(SnackBar(content: Text('Saved $path')));
+              ScaffoldMessenger.of(
+                context,
+              ).showSnackBar(SnackBar(content: Text('Saved $path')));
             }
           }),
           _btn(Icons.fiber_manual_record, 'Record', () async {
@@ -63,8 +98,7 @@ class Hotbar extends ConsumerWidget {
             );
             if (dest == null) return;
             final remote = '/sdcard/screenrecord_tmp.mp4';
-            final handle =
-                await kit.screen.screenrecord(device.serial, remote);
+            final handle = await kit.screen.screenrecord(device.serial, remote);
             if (context.mounted) {
               await showDialog<void>(
                 context: context,
@@ -85,8 +119,9 @@ class Hotbar extends ConsumerWidget {
             await kit.screen.saveRecordingTo(device.serial, remote, dest);
             await kit.files.remove(device.serial, remote);
             if (context.mounted) {
-              ScaffoldMessenger.of(context)
-                  .showSnackBar(SnackBar(content: Text('Saved $dest')));
+              ScaffoldMessenger.of(
+                context,
+              ).showSnackBar(SnackBar(content: Text('Saved $dest')));
             }
           }),
           _btn(Icons.lock, 'Lock screen', () async {

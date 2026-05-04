@@ -103,8 +103,10 @@ class AdbRunner {
       if (Platform.isMacOS) '$home/Library/Android/sdk/platform-tools/adb',
       if (Platform.isLinux) '/usr/bin/adb',
       if (Platform.isLinux) '$home/Android/Sdk/platform-tools/adb',
-      if (Platform.isWindows) '$localAppData\\Android\\Sdk\\platform-tools\\adb.exe',
-      if (Platform.isWindows) '$programFiles\\Android\\android-sdk\\platform-tools\\adb.exe',
+      if (Platform.isWindows)
+        '$localAppData\\Android\\Sdk\\platform-tools\\adb.exe',
+      if (Platform.isWindows)
+        '$programFiles\\Android\\android-sdk\\platform-tools\\adb.exe',
     ];
   }
 

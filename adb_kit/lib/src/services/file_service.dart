@@ -21,8 +21,7 @@ class FileService {
         serial: serial,
       );
 
-  Future<void> mkdir(String serial, String path,
-          {bool parents = true}) =>
+  Future<void> mkdir(String serial, String path, {bool parents = true}) =>
       _runner.runOk(
         ['shell', 'mkdir', if (parents) '-p', shellQuote(path)],
         serial: serial,
@@ -34,14 +33,12 @@ class FileService {
         serial: serial,
       );
 
-  Future<void> move(String serial, String src, String dst) =>
-      _runner.runOk(
+  Future<void> move(String serial, String src, String dst) => _runner.runOk(
         ['shell', 'mv', shellQuote(src), shellQuote(dst)],
         serial: serial,
       );
 
-  Future<void> copy(String serial, String src, String dst) =>
-      _runner.runOk(
+  Future<void> copy(String serial, String src, String dst) => _runner.runOk(
         ['shell', 'cp', '-a', shellQuote(src), shellQuote(dst)],
         serial: serial,
       );
@@ -49,8 +46,8 @@ class FileService {
   Future<void> chmod(String serial, String path, String mode) =>
       _runner.runOk(['shell', 'chmod', mode, shellQuote(path)], serial: serial);
 
-  Future<void> chown(String serial, String path, String owner) =>
-      _runner.runOk(['shell', 'chown', owner, shellQuote(path)], serial: serial);
+  Future<void> chown(String serial, String path, String owner) => _runner
+      .runOk(['shell', 'chown', owner, shellQuote(path)], serial: serial);
 
   Future<String> cat(String serial, String path) => _runner.runOk(
         ['shell', 'cat', shellQuote(path)],

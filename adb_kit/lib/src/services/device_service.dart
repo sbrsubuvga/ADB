@@ -53,11 +53,13 @@ class DeviceService {
   Future<String> getState(String serial) async =>
       (await _runner.runOk(['get-state'], serial: serial)).trim();
 
-  Future<void> root(String serial) =>
-      _runner.runOk(['root'], serial: serial, timeout: const Duration(seconds: 30));
+  Future<void> root(String serial) => _runner
+      .runOk(['root'], serial: serial, timeout: const Duration(seconds: 30));
 
-  Future<void> unroot(String serial) => _runner.runOk(['unroot'], serial: serial);
-  Future<void> remount(String serial) => _runner.runOk(['remount'], serial: serial);
+  Future<void> unroot(String serial) =>
+      _runner.runOk(['unroot'], serial: serial);
+  Future<void> remount(String serial) =>
+      _runner.runOk(['remount'], serial: serial);
   Future<void> disableVerity(String serial) =>
       _runner.runOk(['disable-verity'], serial: serial);
   Future<void> enableVerity(String serial) =>
