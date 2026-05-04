@@ -4,6 +4,7 @@ import '../models/display.dart';
 import '../models/keycode.dart';
 import '../runner/adb_runner.dart';
 
+/// Input source families understood by `input <source> ...`.
 enum InputSource {
   touchscreen,
   touchpad,
@@ -16,6 +17,7 @@ enum InputSource {
   joystick,
   touchnavigation;
 
+  /// CLI token passed to `input`.
   String get token {
     switch (this) {
       case InputSource.touchscreen:
@@ -44,6 +46,7 @@ enum InputSource {
 
 /// Translates widget-space pixel coordinates to device-space.
 class CoordinateMapper {
+  /// Creates a [CoordinateMapper].
   const CoordinateMapper({
     required this.displayWidth,
     required this.displayHeight,
@@ -52,10 +55,19 @@ class CoordinateMapper {
     this.rotation = 0,
   });
 
+  /// Device display width in pixels.
   final double displayWidth;
+
+  /// Device display height in pixels.
   final double displayHeight;
+
+  /// Widget width in pixels.
   final double widgetWidth;
+
+  /// Widget height in pixels.
   final double widgetHeight;
+
+  /// Device rotation in quarters.
   final int rotation;
 
   /// Accepts a widget-space point and returns the corresponding
@@ -100,6 +112,7 @@ class CoordinateMapper {
     return math.max(base.toInt(), actual);
   }
 
+  /// Creates a mapper sized from a known [AdbDisplay].
   static CoordinateMapper fromDisplay(
     AdbDisplay d, {
     required double widgetWidth,
@@ -114,10 +127,13 @@ class CoordinateMapper {
       );
 }
 
+/// Wraps the `input` shell command for taps, swipes, text and key events.
 class InputService {
+  /// Creates an [InputService] backed by [_runner].
   InputService(this._runner);
   final AdbRunner _runner;
 
+  /// Sends a single tap at ([x], [y]).
   Future<void> tap(
     String serial, {
     required int x,
@@ -139,6 +155,7 @@ class InputService {
         timeout: const Duration(seconds: 5),
       );
 
+  /// Performs a swipe from ([x1], [y1]) to ([x2], [y2]) over [durationMs] ms.
   Future<void> swipe(
     String serial, {
     required int x1,
@@ -166,6 +183,7 @@ class InputService {
         timeout: Duration(milliseconds: durationMs + 4000),
       );
 
+  /// Performs a long-press drag from ([x1], [y1]) to ([x2], [y2]).
   Future<void> dragAndDrop(
     String serial, {
     required int x1,
@@ -221,6 +239,7 @@ class InputService {
         text,
       ], serial: serial);
 
+  /// Sends a key event for [key] (a [KeyCode], int, or string token).
   Future<void> keyEvent(
     String serial,
     Object key, {
@@ -245,6 +264,7 @@ class InputService {
     );
   }
 
+  /// Sends a single motion event (`DOWN`, `UP`, `MOVE`) at ([x], [y]).
   Future<void> motionEvent(
     String serial, {
     required String action,
@@ -265,9 +285,11 @@ class InputService {
         serial: serial,
       );
 
+  /// Emits a trackball press event.
   Future<void> press(String serial) =>
       _runner.runOk(['shell', 'input', 'trackball', 'press'], serial: serial);
 
+  /// Rolls the simulated trackball by ([dx], [dy]).
   Future<void> roll(String serial, int dx, int dy) => _runner.runOk(
         ['shell', 'input', 'trackball', 'roll', '$dx', '$dy'],
         serial: serial,

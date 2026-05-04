@@ -1,4 +1,6 @@
+/// One entry from `ls -la` on the device.
 class FileEntry {
+  /// Creates a [FileEntry].
   const FileEntry({
     required this.name,
     required this.path,
@@ -12,15 +14,34 @@ class FileEntry {
     this.linkTarget,
   });
 
+  /// File or directory name.
   final String name;
+
+  /// Absolute path on the device.
   final String path;
+
+  /// True if this entry is a directory.
   final bool isDirectory;
+
+  /// True if this entry is a symbolic link.
   final bool isLink;
+
+  /// File size in bytes.
   final int size;
+
+  /// Permissions string (e.g. `drwxr-xr-x`).
   final String? permissions;
+
+  /// Owning user.
   final String? owner;
+
+  /// Owning group.
   final String? group;
+
+  /// Last-modified timestamp, when parseable.
   final DateTime? modified;
+
+  /// Target path when [isLink] is true.
   final String? linkTarget;
 
   /// Parse a line of `ls -la` output. Android's toybox ls:
@@ -62,6 +83,7 @@ class FileEntry {
     );
   }
 
+  /// Parse the full output of `ls -la` rooted at [parent].
   static List<FileEntry> parseLs(String stdout, String parent) {
     final out = <FileEntry>[];
     for (final raw in stdout.split('\n')) {

@@ -7,5 +7,5 @@ String shellQuote(String input) {
   return "'${input.replaceAll("'", r"'\''")}'";
 }
 
-/// Join a list of args with shellQuote.
+/// Join a list of args with [shellQuote].
 String shellJoin(Iterable<String> parts) => parts.map(shellQuote).join(' ');

@@ -1,4 +1,6 @@
+/// An installed Android application package.
 class AdbPackage {
+  /// Creates an [AdbPackage].
   const AdbPackage({
     required this.packageName,
     this.apkPath,
@@ -9,12 +11,25 @@ class AdbPackage {
     this.isEnabled = true,
   });
 
+  /// Application id (e.g. `com.example.app`).
   final String packageName;
+
+  /// Absolute on-device path to the base APK, when reported.
   final String? apkPath;
+
+  /// Manifest versionCode, when reported.
   final int? versionCode;
+
+  /// Package id of the installer, when reported.
   final String? installerPackage;
+
+  /// Linux uid assigned to the package, when reported.
   final int? uid;
+
+  /// True for system / vendor / product apps.
   final bool isSystem;
+
+  /// Whether the package is currently enabled.
   final bool isEnabled;
 
   /// Parse lines from `pm list packages [-f] [-i] [--show-versioncode] [-U]`.
@@ -68,6 +83,7 @@ class AdbPackage {
     return packages;
   }
 
+  /// Returns a copy with [isEnabled] replaced.
   AdbPackage copyWith({bool? isEnabled}) => AdbPackage(
         packageName: packageName,
         apkPath: apkPath,

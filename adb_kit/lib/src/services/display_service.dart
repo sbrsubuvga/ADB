@@ -1,7 +1,9 @@
 import '../models/display.dart';
 import '../runner/adb_runner.dart';
 
+/// Wraps `wm` and `cmd display` for size/density/rotation control.
 class DisplayService {
+  /// Creates a [DisplayService] backed by [_runner].
   DisplayService(this._runner);
   final AdbRunner _runner;
 
@@ -60,23 +62,29 @@ class DisplayService {
     return list;
   }
 
+  /// Sets the override display resolution to [width]x[height].
   Future<void> setSize(String serial, int width, int height) => _runner
       .runOk(['shell', 'wm', 'size', '${width}x$height'], serial: serial);
 
+  /// Clears any size override and restores the physical resolution.
   Future<void> resetSize(String serial) =>
       _runner.runOk(['shell', 'wm', 'size', 'reset'], serial: serial);
 
+  /// Sets the override display density to [dpi].
   Future<void> setDensity(String serial, int dpi) =>
       _runner.runOk(['shell', 'wm', 'density', '$dpi'], serial: serial);
 
+  /// Clears any density override and restores the physical dpi.
   Future<void> resetDensity(String serial) =>
       _runner.runOk(['shell', 'wm', 'density', 'reset'], serial: serial);
 
+  /// Locks user rotation to [quarter] (0..3).
   Future<void> setRotation(String serial, int quarter) => _runner.runOk(
         ['shell', 'wm', 'user-rotation', 'lock', '$quarter'],
         serial: serial,
       );
 
+  /// Releases the user-rotation lock.
   Future<void> unfreezeRotation(String serial) =>
       _runner.runOk(['shell', 'wm', 'user-rotation', 'free'], serial: serial);
 
@@ -98,16 +106,19 @@ class DisplayService {
     return out;
   }
 
+  /// Removes any overlay display configuration.
   Future<void> clearOverlayDisplays(String serial) => _runner.runOk(
         ['shell', 'settings', 'delete', 'global', 'overlay_display_devices'],
         serial: serial,
       );
 
+  /// Sets the screen brightness (0..255).
   Future<void> setBrightness(String serial, int value) => _runner.runOk(
         ['shell', 'settings', 'put', 'system', 'screen_brightness', '$value'],
         serial: serial,
       );
 
+  /// Configures the `svc power stayon` mode (e.g. `true`, `usb`, `ac`).
   Future<void> stayOn(String serial, String mode) =>
       _runner.runOk(['shell', 'svc', 'power', 'stayon', mode], serial: serial);
 }

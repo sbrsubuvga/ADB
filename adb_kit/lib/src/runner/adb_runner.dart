@@ -8,30 +8,54 @@ import 'adb_result.dart';
 /// a line.
 typedef AdbObserver = void Function(AdbEvent event);
 
+/// Base class for events emitted by [AdbObserver].
 sealed class AdbEvent {
+  /// Creates an [AdbEvent].
   const AdbEvent(this.command, this.serial);
+
+  /// Argv that was launched (including `-s serial` if any).
   final List<String> command;
+
+  /// Target device serial, if one was provided.
   final String? serial;
 }
 
+/// Fired when an adb process is launched.
 class AdbEventStart extends AdbEvent {
+  /// Creates an [AdbEventStart].
   const AdbEventStart(super.command, super.serial, this.pid);
+
+  /// OS pid of the spawned process (0 before exec).
   final int pid;
 }
 
+/// Fired for each line of streaming stdout.
 class AdbEventStdout extends AdbEvent {
+  /// Creates an [AdbEventStdout].
   const AdbEventStdout(super.command, super.serial, this.line);
+
+  /// One line of stdout.
   final String line;
 }
 
+/// Fired for each line of streaming stderr.
 class AdbEventStderr extends AdbEvent {
+  /// Creates an [AdbEventStderr].
   const AdbEventStderr(super.command, super.serial, this.line);
+
+  /// One line of stderr.
   final String line;
 }
 
+/// Fired when an adb process exits.
 class AdbEventEnd extends AdbEvent {
+  /// Creates an [AdbEventEnd].
   const AdbEventEnd(super.command, super.serial, this.exitCode, this.duration);
+
+  /// Process exit code.
   final int exitCode;
+
+  /// Wall-clock time the process ran.
   final Duration duration;
 }
 
@@ -40,30 +64,41 @@ class AdbStreamHandle {
   AdbStreamHandle._(this._process, this.stdout, this.stderr, this.command);
 
   final Process _process;
+
+  /// Line-buffered stdout from the underlying process.
   final Stream<String> stdout;
+
+  /// Line-buffered stderr from the underlying process.
   final Stream<String> stderr;
+
+  /// Argv used to start the process.
   final List<String> command;
 
+  /// OS pid of the underlying process.
   int get pid => _process.pid;
 
+  /// Future that completes with the process exit code.
   Future<int> get exitCode => _process.exitCode;
 
-  /// Writes to the process's stdin (e.g. interactive shell).
+  /// Writes [line] followed by a newline to the process's stdin.
   void writeLine(String line) {
     _process.stdin.writeln(line);
   }
 
+  /// Writes raw [bytes] to the process's stdin and flushes.
   Future<void> stdin(List<int> bytes) async {
     _process.stdin.add(bytes);
     await _process.stdin.flush();
   }
 
+  /// Closes the process's stdin (signalling EOF).
   Future<void> close() async {
     try {
       await _process.stdin.close();
     } catch (_) {}
   }
 
+  /// Sends [signal] to the process and escalates to SIGKILL after 2s.
   Future<void> kill([ProcessSignal signal = ProcessSignal.sigterm]) async {
     _process.kill(signal);
     try {
@@ -78,18 +113,21 @@ class AdbStreamHandle {
 /// use concurrently. Serialised per-device queuing can be layered on top via
 /// [AdbRunner.withSerialQueue].
 class AdbRunner {
+  /// Creates an [AdbRunner].
   AdbRunner({
-    String adbPath = 'adb',
+    this.adbPath = 'adb',
     this.defaultTimeout = const Duration(seconds: 15),
     this.observer,
-  }) : _adbPath = adbPath;
+  });
 
-  String _adbPath;
+  /// Path to the `adb` binary to invoke.
+  String adbPath;
+
+  /// Default timeout applied to [run] when none is supplied.
   final Duration defaultTimeout;
-  AdbObserver? observer;
 
-  String get adbPath => _adbPath;
-  set adbPath(String value) => _adbPath = value;
+  /// Optional callback invoked for every adb lifecycle event.
+  AdbObserver? observer;
 
   /// Locate an adb binary in common install locations if [adbPath] fails.
   static List<String> candidatePaths() {
@@ -125,7 +163,7 @@ class AdbRunner {
     final sw = Stopwatch()..start();
     observer?.call(AdbEventStart(cmd, serial, 0));
     final process = await Process.start(
-      _adbPath,
+      adbPath,
       cmd,
       environment: environment,
       runInShell: false,
@@ -199,7 +237,7 @@ class AdbRunner {
       ...args,
     ];
     final process = await Process.start(
-      _adbPath,
+      adbPath,
       cmd,
       environment: environment,
       runInShell: false,
@@ -253,7 +291,7 @@ class AdbRunner {
     ];
     observer?.call(AdbEventStart(cmd, serial, 0));
     final sw = Stopwatch()..start();
-    final process = await Process.start(_adbPath, cmd);
+    final process = await Process.start(adbPath, cmd);
     observer?.call(AdbEventStart(cmd, serial, process.pid));
     final bytes = <int>[];
     final errBuf = StringBuffer();
@@ -284,7 +322,7 @@ class AdbRunner {
     final r = await run(['--version']);
     if (!r.isSuccess) {
       throw AdbException(
-        'Could not execute adb at "$_adbPath". Set a valid path in settings.',
+        'Could not execute adb at "$adbPath". Set a valid path in settings.',
         result: r,
       );
     }

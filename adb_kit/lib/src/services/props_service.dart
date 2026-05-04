@@ -1,9 +1,12 @@
 import '../runner/adb_runner.dart';
 
+/// Wraps `getprop` and `setprop`.
 class PropsService {
+  /// Creates a [PropsService] backed by [_runner].
   PropsService(this._runner);
   final AdbRunner _runner;
 
+  /// Returns every system property as a map.
   Future<Map<String, String>> getAll(String serial) async {
     final out = await _runner.runOk(['shell', 'getprop'], serial: serial);
     final map = <String, String>{};
@@ -17,6 +20,7 @@ class PropsService {
     return map;
   }
 
+  /// Reads a single property.
   Future<String> get(String serial, String key) async =>
       (await _runner.runOk(['shell', 'getprop', key], serial: serial)).trim();
 

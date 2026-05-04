@@ -1,4 +1,6 @@
+/// A logical display known to Android's display manager.
 class AdbDisplay {
+  /// Creates an [AdbDisplay].
   const AdbDisplay({
     required this.id,
     required this.width,
@@ -10,15 +12,28 @@ class AdbDisplay {
     this.name,
   });
 
+  /// Logical display id (0 is the built-in panel).
   final int id;
+
+  /// Display width in pixels.
   final int width;
+
+  /// Display height in pixels.
   final int height;
+
+  /// Display density in dots-per-inch, when known.
   final int? densityDpi;
 
   /// Rotation in quarters: 0,1,2,3.
   final int rotation;
+
+  /// True if this is the device's primary display.
   final bool isPrimary;
+
+  /// True if this is a simulated overlay/virtual display.
   final bool isOverlay;
+
+  /// Human-readable display name when reported by dumpsys.
   final String? name;
 
   /// Parses display entries from `dumpsys display`.
@@ -122,6 +137,7 @@ class AdbDisplay {
     return (int.parse(m.group(1)!), int.parse(m.group(2)!));
   }
 
+  /// Parse `wm density` output and return the dpi value.
   static int? parseWmDensity(String stdout) {
     final m =
         RegExp(r'(?:Override|Physical) density:\s*(\d+)').firstMatch(stdout);
@@ -129,6 +145,7 @@ class AdbDisplay {
     return int.tryParse(m.group(1)!);
   }
 
+  /// Returns a copy with the given fields replaced.
   AdbDisplay copyWith({int? rotation, int? width, int? height}) => AdbDisplay(
         id: id,
         width: width ?? this.width,

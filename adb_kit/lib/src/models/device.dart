@@ -1,3 +1,4 @@
+/// Connection / authorisation state reported by `adb devices`.
 enum DeviceState {
   device,
   offline,
@@ -10,6 +11,7 @@ enum DeviceState {
   noPermissions,
   unknown;
 
+  /// Parses a single state token from `adb devices` output.
   static DeviceState parse(String s) {
     switch (s.trim()) {
       case 'device':
@@ -36,9 +38,12 @@ enum DeviceState {
   }
 }
 
+/// Physical connection medium for a device.
 enum DeviceTransport { usb, tcp, unknown }
 
+/// A single Android device or emulator visible to adb.
 class AdbDevice {
+  /// Creates an [AdbDevice].
   const AdbDevice({
     required this.serial,
     required this.state,
@@ -50,15 +55,31 @@ class AdbDevice {
     this.transport = DeviceTransport.unknown,
   });
 
+  /// The device serial reported by `adb devices`.
   final String serial;
+
+  /// Current connection / authorisation state.
   final DeviceState state;
+
+  /// Build product name (e.g. `sdk_gphone64_arm64`).
   final String? product;
+
+  /// Marketing model name (e.g. `Pixel 7`).
   final String? model;
+
+  /// Internal device codename.
   final String? deviceName;
+
+  /// Stable adb-side transport id.
   final String? transportId;
+
+  /// USB bus path when connected over USB.
   final String? usb;
+
+  /// Whether this device is reached over USB or TCP.
   final DeviceTransport transport;
 
+  /// True when [state] is [DeviceState.device] (ready for commands).
   bool get isReady => state == DeviceState.device;
 
   /// Parse output of `adb devices -l`.
@@ -114,6 +135,7 @@ class AdbDevice {
     return result;
   }
 
+  /// Returns a copy with [state] replaced.
   AdbDevice copyWith({DeviceState? state}) => AdbDevice(
         serial: serial,
         state: state ?? this.state,

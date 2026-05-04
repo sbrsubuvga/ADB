@@ -1,5 +1,11 @@
 # Changelog
 
+## 0.1.1
+
+- Dartdoc comments across the public API (90% coverage).
+- Shorter pubspec description so it renders in pub.dev search snippets.
+- Removed unnecessary getter/setter wrapping `AdbRunner.adbPath`.
+
 ## 0.1.0
 
 Initial release.

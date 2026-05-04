@@ -3,6 +3,7 @@ import 'dart:async';
 import '../models/log_line.dart';
 import '../runner/adb_runner.dart';
 
+/// Logcat ring buffers selectable via `-b`.
 enum LogBuffer {
   main('main'),
   system('system'),
@@ -13,10 +14,14 @@ enum LogBuffer {
   all('all');
 
   const LogBuffer(this.token);
+
+  /// CLI token passed to `logcat -b`.
   final String token;
 }
 
+/// Filter / format options passed to `logcat`.
 class LogcatFilter {
+  /// Creates a [LogcatFilter].
   const LogcatFilter({
     this.tagPriority = const {},
     this.defaultPriority = LogPriority.verbose,
@@ -26,13 +31,25 @@ class LogcatFilter {
     this.uid,
   });
 
+  /// Per-tag minimum priority (e.g. `MyTag: I`).
   final Map<String, LogPriority> tagPriority;
+
+  /// Default priority for tags not in [tagPriority].
   final LogPriority defaultPriority;
+
+  /// Ring buffers to read.
   final List<LogBuffer> buffers;
+
+  /// Output format token (`threadtime`, `time`, `tag`, ...).
   final String format;
+
+  /// Restrict to this pid (`--pid`).
   final int? pid;
+
+  /// Restrict to this uid (`--uid`).
   final String? uid;
 
+  /// Renders these options as the `logcat` argv tail.
   List<String> toArgs() => [
         'logcat',
         for (final b in buffers) ...['-b', b.token],
@@ -45,7 +62,9 @@ class LogcatFilter {
       ];
 }
 
+/// Wraps `logcat` for both streaming tails and snapshot reads.
 class LogcatService {
+  /// Creates a [LogcatService] backed by [_runner].
   LogcatService(this._runner);
   final AdbRunner _runner;
 
@@ -79,12 +98,15 @@ class LogcatService {
     );
   }
 
+  /// Clears the logcat buffers.
   Future<void> clear(String serial) =>
       _runner.runOk(['logcat', '-c'], serial: serial);
 
+  /// Returns the current buffer sizes (`logcat -g`).
   Future<String> bufferSizes(String serial) =>
       _runner.runOk(['logcat', '-g'], serial: serial);
 
+  /// Resizes the logcat buffer to [size] (e.g. `4M`).
   Future<void> setBufferSize(String serial, String size) =>
       _runner.runOk(['logcat', '-G', size], serial: serial);
 }

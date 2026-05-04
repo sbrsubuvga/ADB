@@ -4,10 +4,15 @@ import 'dart:typed_data';
 
 import '../runner/adb_runner.dart';
 
+/// Options for `screencap`.
 class ScreencapOptions {
+  /// Creates a [ScreencapOptions].
   const ScreencapOptions({this.displayId});
+
+  /// Display id to capture (`-d`).
   final int? displayId;
 
+  /// Renders these options as `screencap` argv.
   List<String> toArgs() => [
         'screencap',
         '-p',
@@ -15,7 +20,9 @@ class ScreencapOptions {
       ];
 }
 
+/// Options for `screenrecord`.
 class ScreenrecordOptions {
+  /// Creates a [ScreenrecordOptions].
   const ScreenrecordOptions({
     this.size,
     this.bitRate,
@@ -28,15 +35,26 @@ class ScreenrecordOptions {
 
   /// "WxH"
   final String? size;
+
+  /// Video bit rate in bits per second.
   final int? bitRate;
+
+  /// Stop recording after this many seconds.
   final int? timeLimitSeconds;
+
+  /// Pass `--verbose` to screenrecord.
   final bool verbose;
+
+  /// Pass `--rotate` to screenrecord.
   final bool rotate;
+
+  /// Display id to record (`--display-id`).
   final int? displayId;
 
   /// mp4 | h264 | frames
   final String? outputFormat;
 
+  /// Renders these options as the `screenrecord` flag list.
   List<String> toArgs() => [
         if (size != null) ...['--size', size!],
         if (bitRate != null) ...['--bit-rate', '$bitRate'],
@@ -52,6 +70,7 @@ class ScreenrecordOptions {
 /// mirror backend. The scrcpy backend lives in the host app (requires a
 /// native H.264 decoder).
 class ScreenService {
+  /// Creates a [ScreenService] backed by [_runner].
   ScreenService(this._runner);
   final AdbRunner _runner;
 

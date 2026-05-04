@@ -1,3 +1,4 @@
+/// Logcat priority levels.
 enum LogPriority {
   verbose('V'),
   debug('D'),
@@ -9,8 +10,11 @@ enum LogPriority {
   unknown('?');
 
   const LogPriority(this.letter);
+
+  /// Single-letter form used by `logcat`.
   final String letter;
 
+  /// Returns the priority matching the single-letter token [s].
   static LogPriority fromLetter(String s) {
     for (final p in values) {
       if (p.letter == s) return p;
@@ -18,10 +22,13 @@ enum LogPriority {
     return LogPriority.unknown;
   }
 
+  /// True if this priority is at least as severe as [other].
   bool atLeast(LogPriority other) => index >= other.index;
 }
 
+/// One parsed line of `logcat` output.
 class LogLine {
+  /// Creates a [LogLine].
   const LogLine({
     required this.raw,
     this.timestamp,
@@ -32,12 +39,25 @@ class LogLine {
     this.message,
   });
 
+  /// Original unparsed line.
   final String raw;
+
+  /// Wall-clock timestamp parsed from the line, when available.
   final DateTime? timestamp;
+
+  /// Process id.
   final int? pid;
+
+  /// Thread id.
   final int? tid;
+
+  /// Log priority.
   final LogPriority priority;
+
+  /// Log tag.
   final String? tag;
+
+  /// Log message body.
   final String? message;
 
   /// Parse a line in the `threadtime` format:

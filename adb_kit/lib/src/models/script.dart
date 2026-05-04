@@ -14,6 +14,7 @@ enum ScriptStepType {
   intent,
   assertion;
 
+  /// Stable JSON token for this step type.
   String toJson() {
     switch (this) {
       case ScriptStepType.tap:
@@ -41,6 +42,7 @@ enum ScriptStepType {
     }
   }
 
+  /// Parses the JSON token written by [toJson].
   static ScriptStepType fromJson(String s) {
     switch (s) {
       case 'tap':
@@ -70,7 +72,9 @@ enum ScriptStepType {
   }
 }
 
+/// One step inside a [Script].
 class ScriptStep {
+  /// Creates a [ScriptStep].
   const ScriptStep({
     required this.type,
     this.args = const {},
@@ -78,11 +82,19 @@ class ScriptStep {
     this.comment,
   });
 
+  /// What action this step performs.
   final ScriptStepType type;
+
+  /// Step-specific arguments (e.g. `x`, `y`, `cmd`).
   final Map<String, Object?> args;
+
+  /// Disabled steps are skipped during playback.
   final bool enabled;
+
+  /// Optional human-readable comment.
   final String? comment;
 
+  /// Returns a copy with the given fields replaced.
   ScriptStep copyWith({
     ScriptStepType? type,
     Map<String, Object?>? args,
@@ -96,6 +108,7 @@ class ScriptStep {
         comment: comment ?? this.comment,
       );
 
+  /// Serialises this step to a JSON-compatible map.
   Map<String, Object?> toJson() => {
         'type': type.toJson(),
         ...args,
@@ -103,6 +116,7 @@ class ScriptStep {
         if (comment != null) 'comment': comment,
       };
 
+  /// Parses a step from its JSON representation.
   static ScriptStep fromJson(Map<String, Object?> json) {
     final type = ScriptStepType.fromJson(json['type']! as String);
     final args = Map<String, Object?>.from(json)
@@ -118,7 +132,9 @@ class ScriptStep {
   }
 }
 
+/// A named, ordered sequence of [ScriptStep]s.
 class Script {
+  /// Creates a [Script].
   const Script({
     required this.name,
     required this.steps,
@@ -128,13 +144,25 @@ class Script {
     this.variables = const {},
   });
 
+  /// Display name of the script.
   final String name;
+
+  /// Optional device serial this script was authored against.
   final String? device;
+
+  /// Default display id steps target.
   final int display;
+
+  /// Creation timestamp, when known.
   final DateTime? created;
+
+  /// Default `${name}` interpolation values.
   final Map<String, String> variables;
+
+  /// Ordered steps to execute.
   final List<ScriptStep> steps;
 
+  /// Serialises the script to a JSON-compatible map.
   Map<String, Object?> toJson() => {
         'name': name,
         if (device != null) 'device': device,
@@ -144,8 +172,10 @@ class Script {
         'steps': steps.map((s) => s.toJson()).toList(),
       };
 
+  /// Encodes the script as a pretty-printed JSON string.
   String encode() => const JsonEncoder.withIndent('  ').convert(toJson());
 
+  /// Decodes a script from the JSON [source] produced by [encode].
   static Script decode(String source) {
     final j = jsonDecode(source) as Map<String, Object?>;
     return Script(
@@ -163,6 +193,7 @@ class Script {
     );
   }
 
+  /// Returns a copy with the given fields replaced.
   Script copyWith({
     String? name,
     String? device,

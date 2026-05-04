@@ -19,6 +19,7 @@ import 'services/shell_service.dart';
 
 /// Single-entry API. Construct one [AdbKit] and reuse its services.
 class AdbKit {
+  /// Creates an [AdbKit] that invokes adb at [adbPath].
   AdbKit({String adbPath = 'adb', AdbObserver? observer})
       : runner = AdbRunner(adbPath: adbPath, observer: observer) {
     devices = DeviceService(runner);
@@ -46,31 +47,68 @@ class AdbKit {
     );
   }
 
+  /// Underlying process runner shared by every service.
   final AdbRunner runner;
+
+  /// Device discovery and lifecycle.
   late final DeviceService devices;
+
+  /// `forward`, `reverse`, and `mdns`.
   late final ConnectionService connection;
+
+  /// `pm` package manager wrapper.
   late final PackageService packages;
+
+  /// `am` activity manager wrapper.
   late final ActivityService activity;
+
+  /// `input` taps, swipes, and key events.
   late final InputService input;
+
+  /// `screencap` / `screenrecord` capture.
   late final ScreenService screen;
+
+  /// `wm` and `cmd display` for size, density, and rotation.
   late final DisplayService displays;
+
+  /// `logcat` reader.
   late final LogcatService logcat;
+
+  /// `adb shell` execution.
   late final ShellService shell;
+
+  /// Filesystem and `push` / `pull` helpers.
   late final FileService files;
+
+  /// `settings` namespace access.
   late final SettingsService settings;
+
+  /// `getprop` / `setprop`.
   late final PropsService props;
+
+  /// `svc` / `cmd` networking toggles.
   late final NetworkService network;
+
+  /// `reboot` and screen / idle controls.
   late final PowerService power;
+
+  /// `dumpsys` and `bugreport`.
   late final DumpsysService dumpsys;
+
+  /// `adb backup` / `adb restore`.
   late final BackupService backup;
+
+  /// Script recorder/player built on the other services.
   late final ScriptPlayer scripts;
 
   /// Convenience: detect the adb version string. Throws if adb is missing.
   Future<String> version() => runner.version();
 
+  /// Path to the underlying adb binary.
   String get adbPath => runner.adbPath;
   set adbPath(String value) => runner.adbPath = value;
 
+  /// Optional observer for adb lifecycle events.
   AdbObserver? get observer => runner.observer;
   set observer(AdbObserver? value) => runner.observer = value;
 }

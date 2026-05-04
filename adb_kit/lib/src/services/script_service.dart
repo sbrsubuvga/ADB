@@ -11,32 +11,50 @@ import 'shell_service.dart';
 
 /// Emitted during script playback.
 sealed class ScriptEvent {
+  /// Creates a [ScriptEvent].
   const ScriptEvent(this.index, this.step);
+
+  /// Index of [step] inside the script (or -1 for synthetic events).
   final int index;
+
+  /// The step the event refers to.
   final ScriptStep step;
 }
 
+/// Fired when a step begins executing.
 class ScriptStepStarted extends ScriptEvent {
+  /// Creates a [ScriptStepStarted].
   const ScriptStepStarted(super.index, super.step);
 }
 
+/// Fired when a step finishes successfully.
 class ScriptStepCompleted extends ScriptEvent {
+  /// Creates a [ScriptStepCompleted].
   const ScriptStepCompleted(super.index, super.step, this.message);
+
+  /// Optional human-readable result.
   final String? message;
 }
 
+/// Fired when a step throws.
 class ScriptStepFailed extends ScriptEvent {
+  /// Creates a [ScriptStepFailed].
   const ScriptStepFailed(super.index, super.step, this.error);
+
+  /// The error thrown by the step.
   final Object error;
 }
 
+/// Fired once after the last step.
 class ScriptFinished extends ScriptEvent {
+  /// Creates a [ScriptFinished].
   const ScriptFinished()
       : super(-1, const ScriptStep(type: ScriptStepType.wait));
 }
 
 /// A ScriptRecorder observes manual input and writes out a replayable Script.
 class ScriptRecorder {
+  /// Creates a [ScriptRecorder].
   ScriptRecorder({required this.name, String? device, int display = 0})
       : _script = Script(
           name: name,
@@ -46,17 +64,21 @@ class ScriptRecorder {
           steps: const [],
         );
 
+  /// Display name of the script being recorded.
   final String name;
   Script _script;
   DateTime? _lastStepAt;
 
+  /// The script accumulated so far.
   Script get script => _script;
 
+  /// Records a tap step at ([x], [y]).
   void tap(int x, int y) => _push(ScriptStep(
         type: ScriptStepType.tap,
         args: {'x': x, 'y': y, 'delay_ms': _elapsedMs()},
       ));
 
+  /// Records a swipe from ([x1], [y1]) to ([x2], [y2]) over [durationMs].
   void swipe(int x1, int y1, int x2, int y2, int durationMs) => _push(
         ScriptStep(
           type: ScriptStepType.swipe,
@@ -71,16 +93,19 @@ class ScriptRecorder {
         ),
       );
 
+  /// Records a text-input step.
   void text(String value) => _push(ScriptStep(
         type: ScriptStepType.text,
         args: {'value': value, 'delay_ms': _elapsedMs()},
       ));
 
+  /// Records a key-event step for [keycode].
   void key(String keycode) => _push(ScriptStep(
         type: ScriptStepType.key,
         args: {'keycode': keycode, 'delay_ms': _elapsedMs()},
       ));
 
+  /// Records an intent step from [spec].
   void intent(IntentSpec spec) => _push(ScriptStep(
         type: ScriptStepType.intent,
         args: {
@@ -91,6 +116,7 @@ class ScriptRecorder {
         },
       ));
 
+  /// Records a shell-command step.
   void shell(String cmd) => _push(ScriptStep(
         type: ScriptStepType.shell,
         args: {'cmd': cmd, 'delay_ms': _elapsedMs()},
@@ -108,6 +134,7 @@ class ScriptRecorder {
     _script = _script.copyWith(steps: [..._script.steps, s]);
   }
 
+  /// Drops every recorded step.
   void clear() {
     _lastStepAt = null;
     _script = _script.copyWith(steps: []);
@@ -116,6 +143,7 @@ class ScriptRecorder {
 
 /// Orchestrates script replay.
 class ScriptPlayer {
+  /// Creates a [ScriptPlayer].
   ScriptPlayer({
     required this.input,
     required this.activity,
@@ -124,10 +152,19 @@ class ScriptPlayer {
     required this.logcat,
   });
 
+  /// Service used for tap/swipe/text/key steps.
   final InputService input;
+
+  /// Service used for intent steps.
   final ActivityService activity;
+
+  /// Service used for screenshot steps.
   final ScreenService screen;
+
+  /// Service used for shell steps.
   final ShellService shell;
+
+  /// Service used for `wait_for` logcat conditions.
   final LogcatService logcat;
 
   /// Playback. [speed] > 1 is faster. `stopOnError` aborts on the first

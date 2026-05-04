@@ -2,7 +2,10 @@
 /// constants so IDE autocomplete works. Arbitrary keycode names can still be
 /// passed as strings via [InputService.keyEvent].
 class KeyCode {
+  /// Wraps a raw `KEYCODE_*` token.
   const KeyCode(this.name);
+
+  /// The underlying `KEYCODE_*` string passed to `input keyevent`.
   final String name;
 
   @override
