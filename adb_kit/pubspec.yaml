@@ -1,7 +1,15 @@
 name: adb_kit
 description: A typed Dart wrapper around the Android Debug Bridge (adb). Covers device management, app install, input injection, screencap/screenrecord, logcat streaming, files, intents, dumpsys and scripting.
 version: 0.1.0
-publish_to: none
+homepage: https://github.com/sbrsubuvga/ADB
+repository: https://github.com/sbrsubuvga/ADB
+issue_tracker: https://github.com/sbrsubuvga/ADB/issues
+topics:
+  - adb
+  - android
+  - automation
+  - testing
+  - desktop
 
 environment:
   sdk: ^3.4.0

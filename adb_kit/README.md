@@ -2,7 +2,7 @@
 
 A typed Dart wrapper around the **Android Debug Bridge** (`adb`). Built so Flutter desktop apps, CLI tools, or test harnesses can drive any feature of `adb` without dropping into shell-string concatenation.
 
-> Used by the [`adb_vision`](../adb_vision) example Flutter desktop app — a full GUI for ADB.
+> Used by the [`adb_vision`](example/) example Flutter desktop app — a full GUI for ADB.
 
 ## Features
 
@@ -29,8 +29,7 @@ A typed Dart wrapper around the **Android Debug Bridge** (`adb`). Built so Flutt
 
 ```yaml
 dependencies:
-  adb_kit:
-    path: ../adb_kit  # or the published version
+  adb_kit: ^0.1.0
 ```
 
 ## Usage
@@ -78,7 +77,7 @@ The unit tests cover device parsing, package parsing, coordinate mapping, script
 
 ## Coverage map
 
-The full ADB surface from the [ADB Vision spec](../docs/ADB_VISION_PROMPT.md) is implemented as follows:
+The full ADB surface from the [ADB Vision spec](https://github.com/sbrsubuvga/ADB/blob/main/docs/ADB_VISION_PROMPT.md) is implemented as follows:
 
 | Spec section | Service |
 |---|---|
